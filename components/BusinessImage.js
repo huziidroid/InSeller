@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 import { Avatar } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Colors } from "../../../colors";
-import DefaultImage from "../../../assets/default.jpg";
+import { Colors } from "../colors";
+import DefaultImage from "../assets/default.jpg";
 
 const BusinessImage = () => {
   const [image, setImage] = useState(null);

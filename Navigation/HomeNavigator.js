@@ -1,6 +1,6 @@
 import React from "react";
-import Order from "../screens/Order/Order.js";
-import Home from "../screens/Home/Home.js";
+import Order from "../screens/Order";
+import Home from "../screens/Home";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();

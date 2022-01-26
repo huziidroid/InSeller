@@ -1,9 +1,8 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
 import { useNavigation } from "@react-navigation/native";
-import { Colors } from "../../../colors";
+import { Colors } from "../colors";
 const BottomConfirmation = () => {
   const navigation = useNavigation();
   return (

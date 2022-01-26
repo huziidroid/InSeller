@@ -8,29 +8,33 @@ import {
   TextInput,
   RefreshControl,
 } from "react-native";
-import { Colors } from "../../colors";
+import { Colors } from "../colors";
+import DefaultImage from "../assets/default.jpg";
+import { Avatar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
-const Order = () => {
+import { Entypo } from "@expo/vector-icons";
+
+const Item = () => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(true);
-
+  const [show, setShow] = useState(true);
   const data = [
-    { orderNumber: "101-0002347", itemCount: 10, price: 10 },
-    { orderNumber: "101-0001234", itemCount: 10, price: 10 },
-    { orderNumber: "101-0003243", itemCount: 10, price: 10 },
-    { orderNumber: "101-0004244", itemCount: 10, price: 10 },
-    { orderNumber: "101-0005733", itemCount: 10, price: 10 },
-    { orderNumber: "101-0005443", itemCount: 10, price: 10 },
+    { itemName: "GoldFish Pencil", price: 10, image: "path", status: true },
+    { itemName: "Tibet Soap", price: 10, image: "path", status: false },
+    { itemName: "Socks", price: 10, image: "path", status: true },
+    { itemName: "Bike", price: 10, image: "path", status: true },
+    { itemName: "Bike", price: 10, image: "path", status: true },
+    { itemName: "Bike", price: 10, image: "path", status: true },
   ];
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
 
   useEffect(() => {
-    loadOrdersData();
+    loadItemsData();
   }, []);
-  const loadOrdersData = () => {
+  const loadItemsData = () => {
     setFilteredDataSource(data);
     setMasterDataSource(data);
     setRefreshing(false);
@@ -43,8 +47,8 @@ const Order = () => {
       // Filter the masterDataSource
       // Update FilteredDataSource
       const newData = masterDataSource.filter(function (item) {
-        const itemData = item.orderNumber
-          ? item.orderNumber.toUpperCase()
+        const itemData = item.itemName
+          ? item.itemName.toUpperCase()
           : "".toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
@@ -59,28 +63,58 @@ const Order = () => {
     }
   };
 
-  const OrderDescription = ({ item }) => {
+  const ItemView = ({ item }) => {
     return (
       // Flat List Item
       <TouchableOpacity
-        style={styles.orderContainer}
+        style={styles.ItemContainer}
         activeOpacity={0.5}
-        onPress={() => navigation.navigate("OrderDetails")}
+        onPress={
+          show
+            ? () => navigation.navigate("Item-Add")
+            : () => navigation.getState()
+        }
       >
+        {<Avatar.Image source={DefaultImage} size={40} />}
+        <View style={styles.itemDescription}>
+          <Text style={styles.itemNameStyle}>{item.itemName}</Text>
+
+          <Text
+            style={{
+              color: item.status ? "green" : "gray",
+              fontFamily: "Poppins_300Light",
+              fontSize: 10,
+            }}
+          >
+            {item.status ? "Online" : "Offline"}
+          </Text>
+        </View>
         <View
           style={{
-            flexDirection: "column",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
-          <Text>Order # {item.orderNumber}</Text>
-          <Text>Items {item.itemCount}</Text>
+          <Text style={styles.itemPriceStyle}>{`PKR ${item.price}`}</Text>
+          <Entypo
+            style={{
+              marginRight: 10,
+            }}
+            onPress={() => {
+              setShow(false);
+              alert("Show");
+              setShow(true);
+            }}
+            name="dots-three-vertical"
+            size={20}
+            color={Colors.primaryColor}
+          />
         </View>
-        <Text>Rs. {item.price}</Text>
       </TouchableOpacity>
     );
   };
 
-  const OrderSeparatorView = () => {
+  const ItemSeparatorView = () => {
     return (
       // Flat List Item Separator
       <View
@@ -100,7 +134,7 @@ const Order = () => {
           onChangeText={(text) => searchFilterFunction(text)}
           value={search}
           underlineColorAndroid="transparent"
-          placeholder={`${data.length} Orders (Search by Order Number)`}
+          placeholder={`${data.length} Items (Search by Item name)`}
         />
         <Feather
           style={styles.iconStyle}
@@ -112,31 +146,31 @@ const Order = () => {
       <FlatList
         data={filteredDataSource}
         keyExtractor={(item, index) => index.toString()}
-        ItemSeparatorComponent={OrderSeparatorView}
-        renderItem={OrderDescription}
+        ItemSeparatorComponent={ItemSeparatorView}
+        renderItem={ItemView}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={loadOrdersData} />
+          <RefreshControl refreshing={refreshing} onRefresh={loadItemsData} />
         }
       />
     </View>
   );
 };
 const styles = StyleSheet.create({
-  orderContainer: {
+  ItemContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
     marginTop: 5,
-    backgroundColor: "#FFFFFF",
-    padding: 10,
+    backgroundColor: Colors.white,
+    paddingLeft: 10,
+    paddingBottom: 5,
+    paddingTop: 5,
     borderRadius: 5,
-    height: 50,
     elevation: 3,
   },
-  orderDescription: {
+  itemDescription: {
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
@@ -152,7 +186,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  orderNumberStyle: { fontSize: 16, fontFamily: "Poppins_400Regular" },
+  itemNameStyle: { fontSize: 16, fontFamily: "Poppins_400Regular" },
   itemPriceStyle: {
     fontSize: 16,
     fontFamily: "Poppins_500Medium",
@@ -175,4 +209,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Order;
+export default Item;

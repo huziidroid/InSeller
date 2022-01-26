@@ -1,14 +1,14 @@
 import React, { useRef } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Colors } from "../../colors";
-import BusinessImage from "./components/BusinessImage";
+import { Colors } from "../colors";
+import BusinessImage from "../components/BusinessImage";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RBSheet from "react-native-raw-bottom-sheet";
-import BottomConfirmation from "./components/BottomConfirmation";
+import BottomConfirmation from "../components/BottomConfirmation";
 
 const Account = () => {
   const refRBSheet = useRef();

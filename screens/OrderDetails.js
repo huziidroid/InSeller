@@ -2,8 +2,8 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Colors } from "../../colors";
-import OrderItem from "./components/OrderItem";
+import { Colors } from "../colors";
+import OrderItem from "../components/OrderItem";
 
 const OrderDetails = ({ route }) => {
   return (

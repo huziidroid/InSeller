@@ -2,12 +2,12 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import TabNavigator from "./TabNavigator";
-import OrderDetails from "../screens/OrderDetails/OrderDetails";
-import Login from "../screens/Login/Login";
+import OrderDetails from "../screens/OrderDetails";
+import Login from "../screens/Login";
 import { AntDesign } from "@expo/vector-icons";
-import OTP from "../screens/OTP/OTP";
-import Main from "../screens/Main/Main";
-import AddItem from "../screens/Item/AddItem";
+import OTP from "../screens/OTP";
+import Main from "../screens/Main";
+import AddItem from "../screens/AddItem";
 const Root = createNativeStackNavigator();
 
 const RootNavigator = () => {

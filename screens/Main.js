@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, Button } from "react-native";
-import { Colors } from "../../colors";
+import { Colors } from "../colors";
 
 const Main = () => {
   const navigation = useNavigation();

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Item from "../screens/Item/Item";
+import Item from "../screens/Item";
 import { Ionicons } from "@expo/vector-icons";
 const Stack = createNativeStackNavigator();
 import { TouchableOpacity } from "react-native-gesture-handler";

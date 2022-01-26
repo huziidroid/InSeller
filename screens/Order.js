@@ -8,33 +8,29 @@ import {
   TextInput,
   RefreshControl,
 } from "react-native";
-import { Colors } from "../../colors";
-import DefaultImage from "../../assets/default.jpg";
-import { Avatar } from "react-native-paper";
+import { Colors } from "../colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-
-const Item = () => {
+const Order = () => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(true);
-  const [show, setShow] = useState(true);
+
   const data = [
-    { itemName: "GoldFish Pencil", price: 10, image: "path", status: true },
-    { itemName: "Tibet Soap", price: 10, image: "path", status: false },
-    { itemName: "Socks", price: 10, image: "path", status: true },
-    { itemName: "Bike", price: 10, image: "path", status: true },
-    { itemName: "Bike", price: 10, image: "path", status: true },
-    { itemName: "Bike", price: 10, image: "path", status: true },
+    { orderNumber: "101-0002347", itemCount: 10, price: 10 },
+    { orderNumber: "101-0001234", itemCount: 10, price: 10 },
+    { orderNumber: "101-0003243", itemCount: 10, price: 10 },
+    { orderNumber: "101-0004244", itemCount: 10, price: 10 },
+    { orderNumber: "101-0005733", itemCount: 10, price: 10 },
+    { orderNumber: "101-0005443", itemCount: 10, price: 10 },
   ];
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
 
   useEffect(() => {
-    loadItemsData();
+    loadOrdersData();
   }, []);
-  const loadItemsData = () => {
+  const loadOrdersData = () => {
     setFilteredDataSource(data);
     setMasterDataSource(data);
     setRefreshing(false);
@@ -47,8 +43,8 @@ const Item = () => {
       // Filter the masterDataSource
       // Update FilteredDataSource
       const newData = masterDataSource.filter(function (item) {
-        const itemData = item.itemName
-          ? item.itemName.toUpperCase()
+        const itemData = item.orderNumber
+          ? item.orderNumber.toUpperCase()
           : "".toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
@@ -63,58 +59,28 @@ const Item = () => {
     }
   };
 
-  const ItemView = ({ item }) => {
+  const OrderDescription = ({ item }) => {
     return (
       // Flat List Item
       <TouchableOpacity
-        style={styles.ItemContainer}
+        style={styles.orderContainer}
         activeOpacity={0.5}
-        onPress={
-          show
-            ? () => navigation.navigate("Item-Add")
-            : () => navigation.getState()
-        }
+        onPress={() => navigation.navigate("OrderDetails")}
       >
-        {<Avatar.Image source={DefaultImage} size={40} />}
-        <View style={styles.itemDescription}>
-          <Text style={styles.itemNameStyle}>{item.itemName}</Text>
-
-          <Text
-            style={{
-              color: item.status ? "green" : "gray",
-              fontFamily: "Poppins_300Light",
-              fontSize: 10,
-            }}
-          >
-            {item.status ? "Online" : "Offline"}
-          </Text>
-        </View>
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: "column",
           }}
         >
-          <Text style={styles.itemPriceStyle}>{`PKR ${item.price}`}</Text>
-          <Entypo
-            style={{
-              marginRight: 10,
-            }}
-            onPress={() => {
-              setShow(false);
-              alert("Show");
-              setShow(true);
-            }}
-            name="dots-three-vertical"
-            size={20}
-            color={Colors.primaryColor}
-          />
+          <Text>Order # {item.orderNumber}</Text>
+          <Text>Items {item.itemCount}</Text>
         </View>
+        <Text>Rs. {item.price}</Text>
       </TouchableOpacity>
     );
   };
 
-  const ItemSeparatorView = () => {
+  const OrderSeparatorView = () => {
     return (
       // Flat List Item Separator
       <View
@@ -134,7 +100,7 @@ const Item = () => {
           onChangeText={(text) => searchFilterFunction(text)}
           value={search}
           underlineColorAndroid="transparent"
-          placeholder={`${data.length} Items (Search by Item name)`}
+          placeholder={`${data.length} Orders (Search by Order Number)`}
         />
         <Feather
           style={styles.iconStyle}
@@ -146,31 +112,31 @@ const Item = () => {
       <FlatList
         data={filteredDataSource}
         keyExtractor={(item, index) => index.toString()}
-        ItemSeparatorComponent={ItemSeparatorView}
-        renderItem={ItemView}
+        ItemSeparatorComponent={OrderSeparatorView}
+        renderItem={OrderDescription}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={loadItemsData} />
+          <RefreshControl refreshing={refreshing} onRefresh={loadOrdersData} />
         }
       />
     </View>
   );
 };
 const styles = StyleSheet.create({
-  ItemContainer: {
+  orderContainer: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     marginLeft: 20,
     marginRight: 20,
     marginBottom: 5,
     marginTop: 5,
-    backgroundColor: Colors.white,
-    paddingLeft: 10,
-    paddingBottom: 5,
-    paddingTop: 5,
+    backgroundColor: "#FFFFFF",
+    padding: 10,
     borderRadius: 5,
+    height: 50,
     elevation: 3,
   },
-  itemDescription: {
+  orderDescription: {
     flex: 1,
     justifyContent: "center",
     alignItems: "flex-start",
@@ -186,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  itemNameStyle: { fontSize: 16, fontFamily: "Poppins_400Regular" },
+  orderNumberStyle: { fontSize: 16, fontFamily: "Poppins_400Regular" },
   itemPriceStyle: {
     fontSize: 16,
     fontFamily: "Poppins_500Medium",
@@ -209,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Item;
+export default Order;

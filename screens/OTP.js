@@ -2,7 +2,6 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { StyleSheet, SafeAreaView, Text, Button } from "react-native";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
-import { checkVerification } from "../../api/verify";
 
 const OTP = ({ route }) => {
   const number = route.params;

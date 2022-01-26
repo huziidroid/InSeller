@@ -4,7 +4,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import PhoneInput from "react-native-phone-number-input";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { sendSmsVerification } from "../../api/verify";
 
 const Login = () => {
   const dialCall = () => {

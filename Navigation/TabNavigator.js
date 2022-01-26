@@ -1,6 +1,4 @@
 import React from "react";
-import { View, Text } from "react-native";
-// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
   MaterialCommunityIcons,
   Entypo,
@@ -8,9 +6,8 @@ import {
   AntDesign,
   FontAwesome,
 } from "@expo/vector-icons";
-import Order from "../screens/Order/Order.js";
-import Search from "../screens/Search/Search.js";
-import HomeNavigator from "./HomeNavigator.js";
+import Search from "../screens/Search";
+import HomeNavigator from "./HomeNavigator";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AccountNavigator from "./AccountNavigator.js";
 import ItemNavigator from "./ItemNavigator.js";
