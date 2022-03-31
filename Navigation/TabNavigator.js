@@ -1,101 +1,156 @@
-import React from "react";
-import {
-  MaterialCommunityIcons,
-  Entypo,
-  FontAwesome5,
-  AntDesign,
-  FontAwesome,
-} from "@expo/vector-icons";
-import Search from "../screens/Search";
-import HomeNavigator from "./HomeNavigator";
+import React, { useEffect, useRef } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import AccountNavigator from "./AccountNavigator.js";
 import ItemNavigator from "./ItemNavigator.js";
 import OrderNavigator from "./OrderNavigator.js";
+import { Colors } from "../colors";
+import * as Animatable from "react-native-animatable";
+import Icon, { Icons } from "../components/Icons";
+import Category from "../screens/Category";
+import Home from "../screens/Home";
 const Tab = createBottomTabNavigator();
+
+const TabArr = [
+  {
+    route: "home",
+    label: "Home",
+    type: Icons.Entypo,
+    icon: "home",
+    component: Home,
+    color: Colors.secondary,
+    alphaClr: Colors.secondaryAlpha,
+  },
+  {
+    route: "item",
+    label: "Items",
+    type: Icons.FontAwesome5,
+    icon: "stack-overflow",
+    component: ItemNavigator,
+    color: Colors.secondary,
+    alphaClr: Colors.secondaryAlpha,
+  },
+  {
+    route: "category",
+    label: "Categories",
+    type: Icons.MaterialIcons,
+    icon: "category",
+    component: Category,
+    color: Colors.secondary,
+    alphaClr: Colors.secondaryAlpha,
+  },
+  {
+    route: "order",
+    label: "Orders",
+    type: Icons.FontAwesome,
+    icon: "reorder",
+    component: OrderNavigator,
+    color: Colors.secondary,
+    alphaClr: Colors.secondaryAlpha,
+  },
+];
+
+const TabButton = (props) => {
+  const { item, onPress, accessibilityState } = props;
+  const focused = accessibilityState.selected;
+  const viewRef = useRef(null);
+  const textViewRef = useRef(null);
+
+  useEffect(() => {
+    if (focused) {
+      // 0.3: { scale: .7 }, 0.5: { scale: .3 }, 0.8: { scale: .7 },
+      viewRef.current.animate({ 0: { scale: 0 }, 1: { scale: 1 } });
+      textViewRef.current.animate({ 0: { scale: 0 }, 1: { scale: 1 } });
+    } else {
+      viewRef.current.animate({ 0: { scale: 1 }, 1: { scale: 0 } });
+      textViewRef.current.animate({ 0: { scale: 1 }, 1: { scale: 0 } });
+    }
+  }, [focused]);
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={1}
+      style={[styles.container, { flex: focused ? 1 : 0.65 }]}
+    >
+      <View>
+        <Animatable.View
+          ref={viewRef}
+          style={[
+            StyleSheet.absoluteFillObject,
+            { backgroundColor: item.color, borderRadius: 16 },
+          ]}
+        />
+        <View
+          style={[
+            styles.btn,
+            { backgroundColor: focused ? null : item.alphaClr },
+          ]}
+        >
+          <Icon
+            type={item.type}
+            name={item.icon}
+            color={focused ? Colors.white : Colors.secondary}
+          />
+          <Animatable.View ref={textViewRef}>
+            {focused && (
+              <Text
+                style={{
+                  color: Colors.white,
+                  paddingHorizontal: 8,
+                }}
+              >
+                {item.label}
+              </Text>
+            )}
+          </Animatable.View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#5F939A",
-        tabBarInactiveTintColor: "#363636",
-        // tabBarStyle: {
-        //   position: "absolute",
-        //   bottom: 10,
-        //   left: 20,
-        //   right: 20,
-        //   overflow: "hidden",
-        //   height: 65,
-        //   backgroundColor: "white",
-        //   borderRadius: 20,
-        //   shadowColor: "#7f5df0",
-        //   shadowOffset: {
-        //     width: 0,
-        //     height: 10,
-        //   },
-        //   shadowOpacity: 0.25,
-        //   shadowRadius: 3.5,
-        //   elevation: 2,
-        // },
-        // tabBarLabelStyle: {
-        //   marginBottom: 5,
-        // },
+        tabBarStyle: {
+          height: 60,
+          position: "absolute",
+          bottom: 16,
+          right: 16,
+          left: 16,
+          borderRadius: 16,
+        },
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeNavigator}
-        options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color }) => (
-            <Entypo name="home" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Item"
-        component={ItemNavigator}
-        options={{
-          tabBarLabel: "Item",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="stack-overflow" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={Search}
-        options={{
-          tabBarLabel: "Search",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="search1" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Order"
-        component={OrderNavigator}
-        options={{
-          tabBarLabel: "Order",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name="reorder" color={color} size={26} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Account"
-        component={AccountNavigator}
-        options={{
-          tabBarLabel: "Account",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={26} />
-          ),
-        }}
-      />
+      {TabArr.map((item, index) => {
+        return (
+          <Tab.Screen
+            key={index}
+            name={item.route}
+            component={item.component}
+            options={{
+              tabBarShowLabel: false,
+              tabBarButton: (props) => <TabButton {...props} item={item} />,
+            }}
+          />
+        );
+      })}
     </Tab.Navigator>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btn: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 8,
+    borderRadius: 16,
+  },
+});
 export default TabNavigator;

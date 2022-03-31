@@ -14,7 +14,6 @@ function HomeNavigator() {
       }}
     >
       <Stack.Screen name="HomeScreen" component={Home} />
-      <Stack.Screen name="Order" component={Order} />
     </Stack.Navigator>
   );
 }

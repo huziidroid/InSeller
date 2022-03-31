@@ -1,13 +1,11 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import TabNavigator from "./TabNavigator";
 import OrderDetails from "../screens/OrderDetails";
 import Login from "../screens/Login";
-import { AntDesign } from "@expo/vector-icons";
-import OTP from "../screens/OTP";
 import Main from "../screens/Main";
 import AddItem from "../screens/AddItem";
+import Signup from "../screens/Signup";
+import DrawerNavigator from "./DrawerNavigator";
 const Root = createNativeStackNavigator();
 
 const RootNavigator = () => {
@@ -20,10 +18,23 @@ const RootNavigator = () => {
           headerShown: false,
         }}
       />
-      <Root.Screen name="Login" component={Login} />
       <Root.Screen
-        name="Tab"
-        component={TabNavigator}
+        name="login"
+        component={Login}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Root.Screen
+        name="signup"
+        component={Signup}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Root.Screen
+        name="drawer"
+        component={DrawerNavigator}
         options={{
           headerShown: false,
         }}
@@ -31,7 +42,6 @@ const RootNavigator = () => {
 
       <Root.Screen name="OrderDetails" component={OrderDetails} />
       <Root.Screen name="Item-Add" component={AddItem} />
-      <Root.Screen name="OTP Verification" component={OTP} />
     </Root.Navigator>
   );
 };

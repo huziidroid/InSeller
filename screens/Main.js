@@ -34,7 +34,7 @@ const Main = () => {
 
       <Button
         title="Create Your Online Store"
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => navigation.navigate("login")}
       ></Button>
     </View>
   );

@@ -12,6 +12,7 @@ const AccountNavigator = () => {
         component={Account}
         options={{
           headerTitle: "Account",
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

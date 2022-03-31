@@ -1,195 +1,156 @@
 import React, { useState, useRef } from "react";
-import { View, Text, Linking } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import PhoneInput from "react-native-phone-number-input";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Button, Input, Divider, CheckBox } from "react-native-elements";
+import * as Animatable from "react-native-animatable";
+import { Colors } from "../colors";
+import Toast from "react-native-toast-message";
 
 const Login = () => {
-  const dialCall = () => {
-    let phoneNumber = "";
-    if (Platform.OS === "android") {
-      phoneNumber = `tel:03312220373`;
-    } else {
-      phoneNumber = `telprompt:03312220373`;
-    }
-    Linking.openURL(phoneNumber);
-  };
-
   const navigation = useNavigation();
-  const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("");
-  const [valid, setValid] = useState(false);
-  const phoneInput = useRef();
-
+  const [visible, setVisible] = useState(true);
+  const passwordRef = useRef();
+  const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "space-between",
-      }}
-    >
-      <View
-        style={{
-          minHeight: 100,
-          paddingLeft: 20,
-          paddingTop: 20,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 20,
-          }}
-        >
-          What's your Mobile number?
-        </Text>
-        <Text
-          style={{
-            fontSize: 12,
-          }}
-        >
-          We will send you a verification code
-        </Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.header_label}>SignIn to store</Text>
       </View>
+      <Animatable.View style={styles.footer} animation="fadeInUpBig">
+        <ScrollView>
+          <Input
+            keyboardType="phone-pad"
+            style={styles.textInput}
+            label="Phone number"
+            labelStyle={styles.textInput_label}
+            placeholder="Enter you mobile number"
+            returnKeyType="next"
+            onSubmitEditing={() => passwordRef.current.focus()}
+          />
+          <Input
+            keyboardType="twitter"
+            style={styles.textInput}
+            secureTextEntry={visible}
+            label="Password"
+            ref={passwordRef}
+            rightIcon={
+              <TouchableOpacity>
+                {visible ? (
+                  <MaterialCommunityIcons
+                    name="seed-off-outline"
+                    size={17}
+                    onPress={() => setVisible(!visible)}
+                    color="black"
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="seed-outline"
+                    size={17}
+                    onPress={() => setVisible(!visible)}
+                    color="black"
+                  />
+                )}
+              </TouchableOpacity>
+            }
+            labelStyle={styles.textInput_label}
+            placeholder="Enter password"
+          />
 
-      {/* Phone Number */}
-      <View
-        style={{
-          height: 100,
-          justifyContent: "center",
-          alignItems: "center",
-          position: "absolute",
-          top: 170,
-          left: 40,
-          right: 40,
-        }}
-      >
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            marginBottom: 20,
-            fontSize: 15,
-            fontWeight: "bold",
-          }}
-        >
-          Mobile Number
-        </Text>
-        <PhoneInput
-          defaultCode="PK"
-          containerStyle={{
-            borderRadius: 10,
-          }}
-          textContainerStyle={{
-            borderRadius: 10,
-          }}
-          ref={phoneInput}
-          defaultValue={value}
-          layout="first"
-          placeholder="Mobile Number"
-          onChangeText={(text) => {
-            setValue(text);
-          }}
-          onChangeFormattedText={(text) => {
-            setFormattedValue(text);
-          }}
-          countryPickerProps={{ withAlphaFilter: true }}
-          withShadow
-          autoFocus
-        />
-
-        {!valid && value.length > 0 && value.length < 10 && (
-          <View>
-            <Text
-              style={{
-                color: "red",
-              }}
-            >
-              Mobile Number entered is not valid
-            </Text>
-            <Text
-              style={{
-                color: "red",
-              }}
-            >
-              Format: 3xx1234567
-            </Text>
-          </View>
-        )}
-      </View>
-
-      <View
-        style={{
-          height: 100,
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          paddingBottom: 20,
-          paddingTop: 50,
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            flexDirection: "row",
-          }}
-          onPress={dialCall}
-        >
-          <Text
-            style={{
-              marginLeft: 20,
-              marginRight: 10,
-              fontSize: 15,
-              fontWeight: "600",
-              color: "gray",
+          <CheckBox
+            title="Remember me"
+            checked={checked}
+            checkedColor={Colors.secondary}
+            onPress={() => setChecked(!checked)}
+          />
+          <Button
+            title="SignIn"
+            loading={loading}
+            buttonStyle={styles.button}
+            onPress={() => {
+              setLoading(!loading);
+              setTimeout(() => {
+                Toast.show({
+                  type: "success",
+                  position: "top",
+                  text1: "Login Status",
+                  text2: "Successfully logged in 🎉",
+                  visibilityTime: 2000,
+                });
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "drawer" }],
+                });
+                navigation.navigate("drawer");
+              }, 1000);
             }}
-          >
-            Any Trouble? Call Us
-          </Text>
-          <Ionicons name="call-outline" size={20} color="black" />
-        </TouchableOpacity>
-
-        <View
-          style={{
-            borderWidth: 1,
-            borderRadius: 10,
-            height: 50,
-            flex: 0.5,
-            justifyContent: "center",
-            alignContent: "center",
-            marginRight: 20,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignContent: "center",
+          ></Button>
+          <Divider inset={true} insetType="middle" />
+          <Button
+            title="Signup"
+            type="outline"
+            buttonStyle={{
+              borderRadius: 10,
+              height: 50,
+              marginVertical: 15,
+              marginHorizontal: 10,
             }}
             onPress={() => {
-              const checkValid = phoneInput.current?.isValidNumber(value);
-              setValid(checkValid ? checkValid : false);
-              if (checkValid) {
-                // sendSmsVerification(formattedValue).then((sent) => {
-                //   navigation.navigate("OTP Verification", { formattedValue });
-                // });
-                navigation.navigate("OTP Verification", { formattedValue });
-              }
+              navigation.navigate("signup");
             }}
-            // onPress={() => }
-          >
-            <Ionicons name="md-checkmark-done-circle" size={24} color="black" />
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-              }}
-            >
-              Next
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+          ></Button>
+        </ScrollView>
+      </Animatable.View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.secondary,
+  },
+  header: {
+    flex: 1,
+    backgroundColor: Colors.secondary,
+    paddingHorizontal: 20,
+    paddingBottom: 50,
+    justifyContent: "flex-end",
+  },
+  footer: {
+    flex: 3,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+  },
+  header_label: {
+    fontSize: 25,
+    fontFamily: "Poppins_700Bold",
+    color: Colors.primary,
+  },
+  textInput: {
+    flex: 1,
+    fontSize: 17,
+    fontFamily: "Poppins_400Regular",
+    marginVertical: 5,
+    height: 50,
+  },
+  textInput_label: {
+    color: Colors.textColor,
+    fontFamily: "Poppins_400Regular",
+  },
+  button: {
+    backgroundColor: Colors.secondary,
+    marginTop: 40,
+    height: 50,
+    borderRadius: 10,
+    marginBottom: 15,
+    marginHorizontal: 10,
+  },
+});
 
 export default Login;
