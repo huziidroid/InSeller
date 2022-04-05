@@ -9,9 +9,9 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="home">
+    <Drawer.Navigator>
       <Drawer.Screen
-        name="home"
+        name="tab"
         component={TabNavigator}
         options={{
           headerShown: false,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OrderDetails from "../screens/OrderDetails";
 import Login from "../screens/Login";
@@ -7,10 +7,13 @@ import AddItem from "../screens/AddItem";
 import Signup from "../screens/Signup";
 import DrawerNavigator from "./DrawerNavigator";
 const Root = createNativeStackNavigator();
+import { useSelector } from "react-redux";
 
 const RootNavigator = () => {
+  const user = useSelector((state) => state.user.user);
+
   return (
-    <Root.Navigator>
+    <Root.Navigator initialRouteName={user === null ? "Main" : "drawer"}>
       <Root.Screen
         name="Main"
         component={Main}

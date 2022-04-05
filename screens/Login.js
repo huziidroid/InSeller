@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -6,14 +6,46 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Input, Divider, CheckBox } from "react-native-elements";
 import * as Animatable from "react-native-animatable";
 import { Colors } from "../colors";
-import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
+import { SignIn } from "../redux/User/user.action";
+import Toast from "react-native-root-toast";
 
 const Login = () => {
   const navigation = useNavigation();
   const [visible, setVisible] = useState(true);
   const passwordRef = useRef();
   const [checked, setChecked] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user.error) {
+      Toast.show(user.errorMessage, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+    }
+  }, [user.error, user.errorMessage]);
+
+  useEffect(() => {
+    if (user.user !== null) {
+      Toast.show("Login Successfully", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "drawer" }],
+      });
+      navigation.navigate("drawer");
+    }
+  }, [user.user]);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -27,6 +59,8 @@ const Login = () => {
             label="Phone number"
             labelStyle={styles.textInput_label}
             placeholder="Enter you mobile number"
+            value={phone}
+            onChangeText={(text) => setPhone(text)}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()}
           />
@@ -35,6 +69,8 @@ const Login = () => {
             style={styles.textInput}
             secureTextEntry={visible}
             label="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
             ref={passwordRef}
             rightIcon={
               <TouchableOpacity>
@@ -67,24 +103,10 @@ const Login = () => {
           />
           <Button
             title="SignIn"
-            loading={loading}
+            // loading={loading}
             buttonStyle={styles.button}
             onPress={() => {
-              setLoading(!loading);
-              setTimeout(() => {
-                Toast.show({
-                  type: "success",
-                  position: "top",
-                  text1: "Login Status",
-                  text2: "Successfully logged in 🎉",
-                  visibilityTime: 2000,
-                });
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: "drawer" }],
-                });
-                navigation.navigate("drawer");
-              }, 1000);
+              dispatch(SignIn(phone, password));
             }}
           ></Button>
           <Divider inset={true} insetType="middle" />

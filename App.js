@@ -4,6 +4,8 @@ import { SafeAreaView, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./Navigation/RootNavigator";
 import { Colors } from "./colors";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 import {
   useFonts,
@@ -28,16 +30,21 @@ export default function App() {
     return <AppLoading />;
   } else {
     return (
-      <NavigationContainer>
-        <RootSiblingParent>
-          <SafeAreaView
-            style={{ flex: 1, paddingTop: Platform.OS === "android" ? 24 : 0 }}
-          >
-            <RootNavigator />
-            <StatusBar style="auto" backgroundColor={Colors.primary} />
-          </SafeAreaView>
-        </RootSiblingParent>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <RootSiblingParent>
+            <SafeAreaView
+              style={{
+                flex: 1,
+                paddingTop: Platform.OS === "android" ? 24 : 0,
+              }}
+            >
+              <RootNavigator />
+              <StatusBar style="auto" backgroundColor={Colors.primary} />
+            </SafeAreaView>
+          </RootSiblingParent>
+        </NavigationContainer>
+      </Provider>
     );
   }
 }

@@ -1,10 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Button } from "react-native";
 import { Colors } from "../colors";
+import { useDispatch, useSelector } from "react-redux";
+import { storeLocation } from "../components/user-location";
 
 const Main = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    storeLocation(dispatch);
+  }, []);
+
   return (
     <View
       style={{
@@ -33,8 +41,12 @@ const Main = () => {
       </View>
 
       <Button
-        title="Create Your Online Store"
-        onPress={() => navigation.navigate("login")}
+        title="Get Started"
+        onPress={() =>
+          user.user !== null
+            ? navigation.navigate("drawer")
+            : navigation.navigate("login")
+        }
       ></Button>
     </View>
   );

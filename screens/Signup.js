@@ -7,39 +7,62 @@ import { Button, Divider, Input } from "react-native-elements";
 import * as Animatable from "react-native-animatable";
 import { Colors } from "../colors";
 import { Picker } from "@react-native-picker/picker";
-import * as Location from "expo-location";
 import Toast from "react-native-root-toast";
+import { getCategories } from "../redux/StoreCategory/action";
+import { SignUp } from "../redux/User/user.action";
+import { connect } from "react-redux";
 
-const Signup = () => {
+const Signup = ({ user, store_categories, getCategories, SignUp }) => {
   const navigation = useNavigation();
-  const phoneRef = useRef();
-  const addressRef = useRef();
-  const confirmPasswordRef = useRef();
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [category, setCategory] = useState(0);
   const [visible, setVisible] = useState(true);
-  const [selectedValue, setSelectedValue] = useState("");
-  const [location, setLocation] = useState(null);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Toast.show("Permission to location was denied", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
-          animation: true,
-        });
-        return;
-      }
+    getCategories();
+  }, []);
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      Toast.show("Location fetched Successfully", {
-        duration: Toast.durations.SHORT,
+  useEffect(() => {
+    if (store_categories.error) {
+      Toast.show(store_categories.errorMessage, {
+        duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
+        shadow: true,
         animation: true,
       });
-    })();
-  }, []);
+    }
+  }, [store_categories.error]);
+
+  useEffect(() => {
+    if (user.error) {
+      Toast.show(user.errorMessage, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+    }
+  }, [user.error, user.errorMessage]);
+
+  useEffect(() => {
+    if (user.user !== null) {
+      Toast.show("Online Store Created Successfully", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "drawer" }],
+      });
+      navigation.navigate("drawer");
+    }
+  }, [user.user]);
 
   return (
     <View style={styles.container}>
@@ -53,28 +76,28 @@ const Signup = () => {
             style={styles.textInput}
             label="Store name"
             labelStyle={styles.textInput_label}
+            value={name}
+            onChangeText={(text) => setName(text)}
             placeholder="Your store name"
-            returnKeyType="next"
-            onSubmitEditing={() => phoneRef.current.focus()}
           />
+
           <Input
-            ref={phoneRef}
             keyboardType="phone-pad"
             style={styles.textInput}
             label="Phone number"
             labelStyle={styles.textInput_label}
             placeholder="Your mobile number"
-            returnKeyType="next"
-            onSubmitEditing={() => addressRef.current.focus()}
+            value={phone}
+            onChangeText={(text) => setPhone(text)}
           />
           <Input
-            ref={addressRef}
             keyboardType="twitter"
             style={styles.textInput}
             label="Address"
             labelStyle={styles.textInput_label}
             placeholder="Your store address"
-            returnKeyType="next"
+            value={address}
+            onChangeText={(text) => setAddress(text)}
           />
 
           <Text
@@ -100,13 +123,17 @@ const Signup = () => {
             <Picker
               mode="dropdown"
               placeholder="Select store type"
-              selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }
+              selectedValue={category}
+              onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
             >
-              <Picker.Item label="Select Store Type" value="key0" />
-              <Picker.Item label="Online" value="key1" />
+              <Picker.Item label="Select Store Type" value={0} />
+              {store_categories.categories.map((category, key) => (
+                <Picker.Item
+                  key={key}
+                  label={category.name}
+                  value={category.id}
+                />
+              ))}
             </Picker>
           </View>
 
@@ -136,23 +163,45 @@ const Signup = () => {
             }
             labelStyle={styles.textInput_label}
             placeholder="Enter password"
-            returnKeyType="next"
-            onSubmitEditing={() => confirmPasswordRef.current.focus()}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
           />
           <Input
             keyboardType="twitter"
             style={styles.textInput}
             secureTextEntry={visible}
             label="Confirm Password"
-            ref={confirmPasswordRef}
             labelStyle={styles.textInput_label}
-            placeholder="Enter password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
           />
           <Button
             title="Create Store"
             buttonStyle={styles.button}
             onPress={() => {
-              navigation.navigate("drawer");
+              if (password === confirmPassword) {
+                SignUp(name, phone, address, user.location, category, password);
+                if (!user.isLoading) {
+                  if (user.error) {
+                    Toast.show(user.errorMessage, {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.BOTTOM,
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                      delay: 0,
+                    });
+                  }
+                }
+              } else {
+                Toast.show("Password does not match", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  shadow: true,
+                  animation: true,
+                });
+              }
             }}
           ></Button>
           <Divider inset={true} insetType="middle" />
@@ -220,4 +269,18 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    store_categories: state.store_categories,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    SignUp: (name, phone, address, location, category, password) =>
+      dispatch(SignUp(name, phone, address, location, category, password)),
+    getCategories: () => dispatch(getCategories()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

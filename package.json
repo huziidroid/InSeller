@@ -14,15 +14,17 @@
     "@expo-google-fonts/poppins": "^0.2.0",
     "@expo/vector-icons": "^12.0.5",
     "@freakycoder/react-native-single-select": "^0.4.0",
-    "@react-native-community/clipboard": "^1.5.1",
     "@react-native-picker/picker": "2.1.0",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/drawer": "^6.3.3",
     "@react-navigation/material-bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "@reduxjs/toolkit": "^1.8.1",
+    "axios": "^0.26.1",
     "expo": "~43.0.2",
     "expo-app-loading": "~1.2.1",
+    "expo-constants": "^13.0.2",
     "expo-font": "~10.0.3",
     "expo-image-picker": "~11.0.3",
     "expo-location": "~13.0.4",
@@ -45,11 +47,13 @@
     "react-native-root-toast": "^3.3.0",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.8.0",
-    "react-native-toast-message": "^2.1.3",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "react-redux": "^7.2.8",
+    "redux-devtools-extension": "^2.13.9"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@redux-devtools/core": "^3.11.0"
   },
   "private": true
 }
