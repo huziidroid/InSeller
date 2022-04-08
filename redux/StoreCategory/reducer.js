@@ -7,7 +7,7 @@ initialState = {
   errorMessage: "",
 };
 
-const categoryReducer = (state = initialState, action) => {
+const StoreCategoryReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_CATEGORIES_REQUEST:
       return {
@@ -32,4 +32,4 @@ const categoryReducer = (state = initialState, action) => {
   }
 };
 
-export default categoryReducer;
+export default StoreCategoryReducer;

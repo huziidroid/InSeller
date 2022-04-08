@@ -5,7 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./Navigation/RootNavigator";
 import { Colors } from "./colors";
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import store, { persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 import {
   useFonts,
@@ -17,6 +18,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import AppLoading from "expo-app-loading";
 import { RootSiblingParent } from "react-native-root-siblings";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -31,19 +33,23 @@ export default function App() {
   } else {
     return (
       <Provider store={store}>
-        <NavigationContainer>
-          <RootSiblingParent>
-            <SafeAreaView
-              style={{
-                flex: 1,
-                paddingTop: Platform.OS === "android" ? 24 : 0,
-              }}
-            >
-              <RootNavigator />
-              <StatusBar style="auto" backgroundColor={Colors.primary} />
-            </SafeAreaView>
-          </RootSiblingParent>
-        </NavigationContainer>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <RootSiblingParent>
+              <ActionSheetProvider>
+                <SafeAreaView
+                  style={{
+                    flex: 1,
+                    paddingTop: Platform.OS === "android" ? 24 : 0,
+                  }}
+                >
+                  <RootNavigator />
+                  <StatusBar style="auto" backgroundColor={Colors.primary} />
+                </SafeAreaView>
+              </ActionSheetProvider>
+            </RootSiblingParent>
+          </NavigationContainer>
+        </PersistGate>
       </Provider>
     );
   }

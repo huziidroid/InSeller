@@ -2,6 +2,7 @@ import * as actionTypes from "./user.constant";
 import * as userMiddleware from "../../api/middlewares/user.middleware";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 export const SignUpRequest = () => {
   return {
@@ -112,6 +113,14 @@ export const SignIn = (phone_number, password) => {
     } else {
       dispatch(SignInFailure(validate.message));
     }
+  };
+};
+
+export const signOut = () => {
+  const { removeItem } = useAsyncStorage("@user");
+  removeItem();
+  return {
+    type: actionTypes.SIGN_OUT,
   };
 };
 

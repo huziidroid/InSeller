@@ -42,7 +42,7 @@ const Chart = () => {
           backgroundGradientTo: Colors.secondary,
           backgroundGradientToOpacity: 1,
           fillShadowGradient: "#9D60D5",
-          fillShadowGradientOpacity: 0.5,
+          fillShadowGradientOpacity: 1,
           decimalPlaces: 2, // optional, defaults to 2dp
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,

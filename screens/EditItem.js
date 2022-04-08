@@ -5,24 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "../colors";
 import { Input, Button } from "react-native-elements";
-import { options } from "../api/constants/Unit";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import { useNavigation } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const AddItem = () => {
-  const [unit, setUnit] = React.useState("");
-  const [Category_id, setCategory_id] = React.useState(0);
-  const { showActionSheetWithOptions } = useActionSheet();
-  const navigation = useNavigation();
-
+const EditItem = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -47,52 +39,24 @@ const AddItem = () => {
             containerStyle={styles.textInput}
             labelStyle={styles.textInput_label}
           />
-          <TouchableOpacity
-            style={styles.bottom_sheet}
-            onPress={() => {
-              showActionSheetWithOptions(
-                {
-                  options: ["Add New Category"],
-                  containerStyle: {
-                    width: windowWidth,
-                    height: windowHeight - 300,
-                  },
-                  cancelButtonIndex: 0,
-                  title: "Item category",
-                },
-                (buttonIndex) => {
-                  if (buttonIndex === 0) {
-                    navigation.navigate("Category-Add");
-                  }
-                  setCategory_id(buttonIndex);
-                }
-              );
-            }}
-          >
-            <Input
-              value={unit}
-              disabled
-              showSoftInputOnFocus={false}
-              pointerEvents="none"
-              label="Item Category"
-              placeholder="Category Name"
-              inputStyle={styles.inputStyle}
-              containerStyle={styles.textInput}
-              labelStyle={styles.textInput_label}
-            />
-          </TouchableOpacity>
-
           <Input
-            label="Description"
-            placeholder="Description"
+            label="Item Category"
+            placeholder="Category Name"
+            inputStyle={styles.inputStyle}
+            containerStyle={styles.textInput}
+            labelStyle={styles.textInput_label}
+          />
+          <Input
+            label="Selling Price"
+            placeholder="Selling Price"
             inputStyle={styles.inputStyle}
             containerStyle={styles.textInput}
             labelStyle={styles.textInput_label}
           />
           <View style={styles.input_sub_container}>
             <Input
-              label="Sellling Price"
-              placeholder="Selling Price"
+              label="Select item unit"
+              placeholder="Unit"
               inputStyle={styles.inputStyle}
               containerStyle={styles.textInput}
               labelStyle={styles.textInput_label}
@@ -106,41 +70,16 @@ const AddItem = () => {
             />
           </View>
           <View style={styles.input_sub_container}>
-            <TouchableOpacity
-              onPress={() => {
-                showActionSheetWithOptions(
-                  {
-                    options: options,
-                    containerStyle: {
-                      width: windowWidth,
-                      height: windowHeight - 300,
-                    },
-                    cancelButtonIndex: 0,
-                    title: "Select Unit",
-                  },
-                  (buttonIndex) => {
-                    setUnit(options[buttonIndex]);
-                  }
-                );
-              }}
-              style={styles.bottom_sheet}
-            >
-              <Input
-                value={unit}
-                disabled
-                showSoftInputOnFocus={false}
-                pointerEvents="none"
-                label="Select item unit"
-                placeholder="Unit"
-                inputStyle={styles.inputStyle}
-                containerStyle={styles.textInput}
-                labelStyle={styles.textInput_label}
-              />
-            </TouchableOpacity>
-
             <Input
-              label="Cost Price"
-              placeholder="Cost Price"
+              label="Select item unit"
+              placeholder="Unit"
+              inputStyle={styles.inputStyle}
+              containerStyle={styles.textInput}
+              labelStyle={styles.textInput_label}
+            />
+            <Input
+              label="Discount Price"
+              placeholder="Discount price"
               inputStyle={styles.inputStyle}
               containerStyle={styles.textInput}
               labelStyle={styles.textInput_label}
@@ -149,11 +88,18 @@ const AddItem = () => {
           <View style={styles.button_container}>
             <Button
               containerStyle={styles.btn_container_style}
+              buttonStyle={[styles.button, { borderColor: Colors.textDanger }]}
+              type="outline"
+              title="Delete"
+              titleStyle={{ color: Colors.textDanger }}
+            />
+            <Button
+              containerStyle={styles.btn_container_style}
               buttonStyle={[
                 styles.button,
                 { backgroundColor: Colors.secondary },
               ]}
-              title="Add Item"
+              title="Update"
             />
           </View>
         </View>
@@ -161,6 +107,8 @@ const AddItem = () => {
     </View>
   );
 };
+
+export default EditItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -218,11 +166,6 @@ const styles = StyleSheet.create({
   },
   btn_container_style: {
     marginVertical: 40,
-    marginHorizontal: 30,
-  },
-  bottom_sheet: {
-    width: "100%",
+    marginHorizontal: 20,
   },
 });
-
-export default AddItem;

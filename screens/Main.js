@@ -43,7 +43,7 @@ const Main = () => {
       <Button
         title="Get Started"
         onPress={() =>
-          user.user !== null
+          Object.keys(user.user).length !== 0
             ? navigation.navigate("drawer")
             : navigation.navigate("login")
         }

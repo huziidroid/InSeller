@@ -1,24 +1,25 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Item from "../screens/Item";
+import Category from "../screens/Category";
 import { Ionicons } from "@expo/vector-icons";
 const Stack = createNativeStackNavigator();
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../colors";
+import AddCategory from "../screens/AddCategory";
 
-const ItemNavigator = () => {
+const CategoryNavigator = () => {
   const navigation = useNavigation();
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Item-List"
-        component={Item}
+        name="Category-List"
+        component={Category}
         options={{
-          headerTitle: "Items",
+          headerTitle: "Categories",
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Item-Add")}
+              onPress={() => navigation.navigate("Add-Category")}
               style={{
                 marginRight: 10,
               }}
@@ -28,8 +29,9 @@ const ItemNavigator = () => {
           ),
         }}
       />
+      <Stack.Screen name="Add-Category" component={AddCategory} />
     </Stack.Navigator>
   );
 };
 
-export default ItemNavigator;
+export default CategoryNavigator;

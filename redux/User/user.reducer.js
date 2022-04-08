@@ -3,8 +3,8 @@ import * as actionTypes from "./user.constant";
 const initialState = {
   isLoading: false,
   error: false,
-  user: null,
-  token: null,
+  user: {},
+  token: "",
   errorMessage: "",
   location: null,
 };
@@ -30,6 +30,7 @@ const userReducer = (state = initialState, action) => {
         error: false,
         user: action.payload.response.user,
         token: action.payload.response.accessToken,
+        errorMessage: "",
       };
     case actionTypes.SIGN_IN_REQUEST:
       return {
@@ -51,6 +52,13 @@ const userReducer = (state = initialState, action) => {
         user: action.payload.response.user,
         token: action.payload.response.accessToken,
       };
+    case actionTypes.SIGN_OUT:
+      return {
+        ...state,
+        user: {},
+        token: "",
+      };
+
     case actionTypes.USER_LOCATION:
       return {
         ...state,

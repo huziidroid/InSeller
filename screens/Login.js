@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationAction } from "@react-navigation/native";
 import { Button, Input, Divider, CheckBox } from "react-native-elements";
 import * as Animatable from "react-native-animatable";
 import { Colors } from "../colors";
@@ -32,7 +32,7 @@ const Login = () => {
   }, [user.error, user.errorMessage]);
 
   useEffect(() => {
-    if (user.user !== null) {
+    if (Object.keys(user.user).length > 0) {
       Toast.show("Login Successfully", {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
@@ -43,7 +43,7 @@ const Login = () => {
         index: 0,
         routes: [{ name: "drawer" }],
       });
-      navigation.navigate("drawer");
+      //navigation.navigate("drawer");
     }
   }, [user.user]);
   return (

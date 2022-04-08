@@ -49,7 +49,7 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
   }, [user.error, user.errorMessage]);
 
   useEffect(() => {
-    if (user.user !== null) {
+    if (Object.keys(user.user).length > 0) {
       Toast.show("Online Store Created Successfully", {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
@@ -60,7 +60,7 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
         index: 0,
         routes: [{ name: "drawer" }],
       });
-      navigation.navigate("drawer");
+      // navigation.navigate("drawer");
     }
   }, [user.user]);
 

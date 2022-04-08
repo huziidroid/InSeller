@@ -6,8 +6,9 @@ import OrderNavigator from "./OrderNavigator.js";
 import { Colors } from "../colors";
 import * as Animatable from "react-native-animatable";
 import Icon, { Icons } from "../components/Icons";
-import Category from "../screens/Category";
+
 import Home from "../screens/Home";
+import CategoryNavigator from "./CategoryNavigator.js";
 const Tab = createBottomTabNavigator();
 
 const TabArr = [
@@ -34,7 +35,7 @@ const TabArr = [
     label: "Categories",
     type: Icons.MaterialIcons,
     icon: "category",
-    component: Category,
+    component: CategoryNavigator,
     color: Colors.secondary,
     alphaClr: Colors.secondaryAlpha,
   },
@@ -77,7 +78,7 @@ const TabButton = (props) => {
           ref={viewRef}
           style={[
             StyleSheet.absoluteFillObject,
-            { backgroundColor: item.color, borderRadius: 16 },
+            { backgroundColor: item.color, borderRadius: 10 },
           ]}
         />
         <View
@@ -115,12 +116,12 @@ const TabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          height: 60,
+          height: 70,
           position: "absolute",
-          bottom: 16,
-          right: 16,
-          left: 16,
-          borderRadius: 16,
+          // bottom: 16,
+          // right: 16,
+          // left: 16,
+          borderRadius: 10,
         },
       }}
     >

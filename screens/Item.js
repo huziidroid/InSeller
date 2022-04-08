@@ -14,29 +14,35 @@ import { Avatar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
+import { setItems } from "../redux/Items/item.action";
 
 const Item = () => {
+  const store = useSelector((state) => state.user);
+  const items = useSelector((state) => state.items);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(true);
   const [show, setShow] = useState(true);
-  const data = [
-    { itemName: "GoldFish Pencil", price: 10, image: "path", status: true },
-    { itemName: "Tibet Soap", price: 10, image: "path", status: false },
-    { itemName: "Socks", price: 10, image: "path", status: true },
-    { itemName: "Bike", price: 10, image: "path", status: true },
-    { itemName: "Bike", price: 10, image: "path", status: true },
-    { itemName: "Bike", price: 10, image: "path", status: true },
-  ];
+  const itemRef = React.useRef();
+  const dispatch = useDispatch();
+
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
 
   useEffect(() => {
     loadItemsData();
+    // console.log(items);
   }, []);
+  useEffect(() => {
+    if (items.isLoading) {
+      alert("getting");
+    }
+  }, [items.isLoading]);
   const loadItemsData = () => {
-    setFilteredDataSource(data);
-    setMasterDataSource(data);
+    dispatch(setItems(store.user.id));
+    setFilteredDataSource(items.items);
+    setMasterDataSource(items.items);
     setRefreshing(false);
   };
 
@@ -71,7 +77,7 @@ const Item = () => {
         activeOpacity={0.5}
         onPress={
           show
-            ? () => navigation.navigate("Item-Add")
+            ? () => navigation.navigate("Item-Edit")
             : () => navigation.getState()
         }
       >
@@ -107,7 +113,7 @@ const Item = () => {
             }}
             name="dots-three-vertical"
             size={20}
-            color={Colors.primaryColor}
+            color={Colors.secondary}
           />
         </View>
       </TouchableOpacity>
@@ -130,18 +136,21 @@ const Item = () => {
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
         <TextInput
+          ref={itemRef}
           style={styles.textInputStyle}
           onChangeText={(text) => searchFilterFunction(text)}
           value={search}
           underlineColorAndroid="transparent"
-          placeholder={`${data.length} Items (Search by Item name)`}
+          placeholder={`${items.items.length} Items (Search by Item name)`}
         />
-        <Feather
-          style={styles.iconStyle}
-          name="search"
-          size={20}
-          color={Colors.primaryColor}
-        />
+        <TouchableOpacity onPress={() => itemRef.current.focus()}>
+          <Feather
+            style={styles.iconStyle}
+            name="search"
+            size={20}
+            color={Colors.secondary}
+          />
+        </TouchableOpacity>
       </View>
       <FlatList
         data={filteredDataSource}

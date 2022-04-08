@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { View, Text, Share, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Share } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { FlatList } from "react-native";
 import { Colors } from "../colors";
@@ -10,26 +10,77 @@ import Chart from "../components/SalesChart";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-root-toast";
 
 const Home = ({ navigation }) => {
   const [showSales, setShowSales] = useState(true);
   const [showOrders, setShowOrders] = useState(false);
   const user = useSelector((state) => state.user);
+  const url = `https://${user.user.url_name}.inseller.netlify.app`;
+  const onShare = async () => {
+    await Share.share({
+      message: `Hi, you can now order from ${user.user.name} web store.\n\nContact us at ${user.user.phone_number} for more details.\n\n${url}`,
+      title: `${user.user.name} Web Store`,
+    })
+      .then(() => {
+        // Success
+      })
+      .catch((error) => {
+        // Failure
+      });
+  };
+  const copyToClipboard = async () => {
+    await Clipboard.setString(url)
+      .then(() => {
+        Toast.show("Copied to clipboard", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+        });
+      })
+      .catch(() => {
+        Toast.show("Error copying to clipboard", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+        });
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Feather name="menu" size={24} color={Colors.primary} />
         </TouchableOpacity>
-        <Text style={styles.header_label}>{user.user.name}</Text>
+        <View
+          style={{
+            width: "50%",
+          }}
+        >
+          <Text style={styles.header_label}>{user.user.name}</Text>
+        </View>
         <Avatar rounded title="MB" />
       </View>
       <View style={styles.footer}>
         <View style={styles.address_container}>
-          <Text>Share shop address</Text>
+          <Text
+            style={{
+              fontFamily: "Poppins_400Regular",
+              fontSize: 15,
+            }}
+          >
+            Share shop address
+          </Text>
           <View style={styles.address}>
-            <Text>{`http//:localhost:3000/${user.user.url_name}`}</Text>
+            <TouchableOpacity onPress={copyToClipboard}>
+              <Text>{url.slice(0, 30) + (url.length > 30 ? "..." : "")}</Text>
+            </TouchableOpacity>
             <TouchableOpacity
+              onPress={onShare}
               style={{
                 padding: 3,
                 borderWidth: 1,
@@ -83,6 +134,24 @@ const Home = ({ navigation }) => {
               <Chart />
             </Animatable.View>
           ) : null}
+          <View>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+            <Text style={styles.title}>Recent Orders</Text>
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -110,7 +179,7 @@ const styles = StyleSheet.create({
     height: "20%",
     backgroundColor: Colors.primary,
     borderRadius: 10,
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     bottom: 80,
     paddingHorizontal: 20,
     elevation: 5,
@@ -138,8 +207,9 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
   },
   header_label: {
-    fontSize: 20,
-    fontFamily: "Poppins_700Bold",
+    fontSize: 18,
+    fontFamily: "Poppins_500Medium",
     color: Colors.primary,
+    textAlign: "center",
   },
 });
