@@ -16,6 +16,7 @@ import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { setCategories } from "../redux/Categories/category.action";
+import { useIsFocused } from "@react-navigation/native";
 
 const Category = () => {
   const store = useSelector((state) => state.user);
@@ -25,6 +26,7 @@ const Category = () => {
   const [show, setShow] = useState(true);
   const searchRef = React.useRef();
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -34,14 +36,14 @@ const Category = () => {
     loadCategoriesData();
   }, []);
   useEffect(() => {
-    if (categories.isLoading) {
-      alert("getting");
-    }
-  }, [categories.isLoading]);
+    loadCategoriesData();
+  }, [isFocused]);
+
   const loadCategoriesData = () => {
     dispatch(setCategories(store.user.id));
     setFilteredDataSource(categories.categories);
     setMasterDataSource(categories.categories);
+
     setRefreshing(false);
   };
 
@@ -68,7 +70,7 @@ const Category = () => {
     }
   };
 
-  const CategoryView = ({ category }) => {
+  const CategoryView = ({ item }) => {
     return (
       // Flat List Item
       <TouchableOpacity
@@ -76,13 +78,18 @@ const Category = () => {
         activeOpacity={0.5}
         onPress={
           show
-            ? () => navigation.navigate("Category-Edit")
+            ? () => navigation.navigate("Category-Edit", { category: item })
             : () => navigation.getState()
         }
       >
-        {<Avatar.Image source={DefaultImage} size={40} />}
+        {
+          <Avatar.Image
+            source={item.image.length > 0 ? { uri: item.image } : DefaultImage}
+            size={40}
+          />
+        }
         <View style={styles.categoryDescription}>
-          <Text style={styles.categoryNameStyle}>{category.name}</Text>
+          <Text style={styles.categoryNameStyle}>{item.name}</Text>
         </View>
         <View
           style={{
@@ -121,7 +128,12 @@ const Category = () => {
   };
 
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        marginBottom: 80,
+      }}
+    >
       <View style={styles.container}>
         <TextInput
           style={styles.textInputStyle}
@@ -180,7 +192,7 @@ const styles = StyleSheet.create({
     borderTopColor: "lightgray",
     borderBottomWidth: 0.5,
     borderBottomColor: "lightgray",
-    backgroundColor: Colors.white,
+    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

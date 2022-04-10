@@ -9,18 +9,18 @@ initialState = {
 
 const StoreCategoryReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_CATEGORIES_REQUEST:
+    case actionTypes.GET_STORE_CATEGORY_REQUEST:
       return {
         ...state,
         isLoading: true,
       };
-    case actionTypes.GET_CATEGORIES_SUCCESS:
+    case actionTypes.GET_STORE_CATEGORY_SUCCESS:
       return {
         ...state,
         isLoading: false,
         categories: action.payload.response.categories,
       };
-    case actionTypes.GET_CATEGORIES_ERROR:
+    case actionTypes.GET_STORE_CATEGORY_ERROR:
       return {
         ...state,
         isLoading: false,

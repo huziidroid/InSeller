@@ -16,6 +16,8 @@ import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { setItems } from "../redux/Items/item.action";
+import Toast from "react-native-root-toast";
+import { useIsFocused } from "@react-navigation/native";
 
 const Item = () => {
   const store = useSelector((state) => state.user);
@@ -29,6 +31,11 @@ const Item = () => {
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    loadItemsData();
+  }, [isFocused]);
 
   useEffect(() => {
     loadItemsData();
@@ -36,9 +43,22 @@ const Item = () => {
   }, []);
   useEffect(() => {
     if (items.isLoading) {
-      alert("getting");
+      //alert("getting");
     }
   }, [items.isLoading]);
+
+  useEffect(() => {
+    if (items.error) {
+      Toast.show(items.errorMessage, {
+        duration: Toast.durations.SHORT,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      });
+    }
+  }, [items.error]);
   const loadItemsData = () => {
     dispatch(setItems(store.user.id));
     setFilteredDataSource(items.items);
@@ -53,7 +73,7 @@ const Item = () => {
       // Filter the masterDataSource
       // Update FilteredDataSource
       const newData = masterDataSource.filter(function (item) {
-        const itemData = item.itemName
+        const itemData = item.name
           ? item.itemName.toUpperCase()
           : "".toUpperCase();
         const textData = text.toUpperCase();
@@ -77,13 +97,22 @@ const Item = () => {
         activeOpacity={0.5}
         onPress={
           show
-            ? () => navigation.navigate("Item-Edit")
+            ? () => navigation.navigate("Item-Edit", { item: item })
             : () => navigation.getState()
         }
       >
-        {<Avatar.Image source={DefaultImage} size={40} />}
+        {
+          <Avatar.Image
+            source={
+              item.images.length > 0
+                ? { uri: item.images[0].image }
+                : DefaultImage
+            }
+            size={40}
+          />
+        }
         <View style={styles.itemDescription}>
-          <Text style={styles.itemNameStyle}>{item.itemName}</Text>
+          <Text style={styles.itemNameStyle}>{item.name}</Text>
 
           <Text
             style={{
@@ -101,7 +130,9 @@ const Item = () => {
             alignItems: "center",
           }}
         >
-          <Text style={styles.itemPriceStyle}>{`PKR ${item.price}`}</Text>
+          <Text
+            style={styles.itemPriceStyle}
+          >{`PKR ${item.selling_price}`}</Text>
           <Entypo
             style={{
               marginRight: 10,

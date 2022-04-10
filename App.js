@@ -5,8 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./Navigation/RootNavigator";
 import { Colors } from "./colors";
 import { Provider } from "react-redux";
-import store, { persistor } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
+import store from "./redux/store";
 
 import {
   useFonts,
@@ -33,23 +32,21 @@ export default function App() {
   } else {
     return (
       <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <NavigationContainer>
-            <RootSiblingParent>
-              <ActionSheetProvider>
-                <SafeAreaView
-                  style={{
-                    flex: 1,
-                    paddingTop: Platform.OS === "android" ? 24 : 0,
-                  }}
-                >
-                  <RootNavigator />
-                  <StatusBar style="auto" backgroundColor={Colors.primary} />
-                </SafeAreaView>
-              </ActionSheetProvider>
-            </RootSiblingParent>
-          </NavigationContainer>
-        </PersistGate>
+        <NavigationContainer>
+          <RootSiblingParent>
+            <ActionSheetProvider>
+              <SafeAreaView
+                style={{
+                  flex: 1,
+                  paddingTop: Platform.OS === "android" ? 24 : 0,
+                }}
+              >
+                <RootNavigator />
+                <StatusBar style="auto" backgroundColor={Colors.primary} />
+              </SafeAreaView>
+            </ActionSheetProvider>
+          </RootSiblingParent>
+        </NavigationContainer>
       </Provider>
     );
   }

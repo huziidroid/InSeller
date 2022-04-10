@@ -5,13 +5,13 @@ import * as categoryMiddleware from "../../api/middlewares/category.middleware";
 
 export const setCategoriesRequest = () => {
   return {
-    type: actionTypes.SET_CATEGORIES_REQUEST,
+    type: actionTypes.GET_CATEGORIES_REQUEST,
   };
 };
 
 export const setCategoriesSuccess = (response) => {
   return {
-    type: actionTypes.SET_CATEGORIES_SUCCESS,
+    type: actionTypes.GET_CATEGORIES_SUCCESS,
     payload: {
       response: response,
     },
@@ -20,7 +20,7 @@ export const setCategoriesSuccess = (response) => {
 
 export const setCategoriesFailure = (error) => {
   return {
-    type: actionTypes.SET_CATEGORIES_FAILURE,
+    type: actionTypes.GET_CATEGORIES_FAILURE,
     payload: {
       error: error,
     },
@@ -35,11 +35,86 @@ export const setCategories = (store_id) => {
         `${BASE_URL}/api/user/store/item/category/get-all-categories/${store_id}`
       )
       .then((response) => {
-        console.log("response", response.data);
         dispatch(setCategoriesSuccess(response.data));
       })
       .catch((error) => {
         dispatch(setCategoriesFailure(error.response.data.message));
       });
+  };
+};
+
+export const addCategoryRequest = () => {
+  return {
+    type: actionTypes.ADD_CATEGORY_REQUEST,
+  };
+};
+
+export const addCategorySuccess = (response) => {
+  return {
+    type: actionTypes.ADD_CATEGORY_SUCCESS,
+    payload: {
+      response: response,
+    },
+  };
+};
+
+export const addCategoryFailure = (error) => {
+  return {
+    type: actionTypes.ADD_CATEGORY_FAILURE,
+    payload: {
+      error: error,
+    },
+  };
+};
+
+export const addCategory = (store_id, token, category_name, image, base64) => {
+  return (dispatch) => {
+    dispatch(addCategoryRequest());
+    if (categoryMiddleware.validateCategory(category_name).status) {
+      const config = {
+        headers: {
+          "x-access-token": token,
+        },
+      };
+      if (image !== "") {
+        axios
+          .post(
+            "https://api.cloudinary.com/v1_1/dg0rixht0/image/upload",
+            {
+              file: base64,
+              upload_preset: "categories_images",
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((result) => {
+            image = result.data.url;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      axios
+        .post(
+          `${BASE_URL}/api/user/store/item/category/add-category/`,
+          {
+            store_id: store_id,
+            name: category_name,
+            image: image,
+          },
+          config
+        )
+        .then((response) => {
+          dispatch(addCategorySuccess(response.data));
+        })
+        .catch((error) => {
+          dispatch(addCategoryFailure(error.response.data.message));
+        });
+    } else {
+      dispatch(addCategoryFailure("Please enter category name"));
+    }
   };
 };

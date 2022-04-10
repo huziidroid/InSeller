@@ -24,8 +24,8 @@ const CustomDrawer = ({ ...props }) => {
         <Avatar
           size="large"
           source={
-            user.user.business_image !== null
-              ? { uri: user.user.business_image }
+            user.user.business_image_url !== null
+              ? { uri: user.user.business_image_url }
               : DefaultImage
           }
           rounded

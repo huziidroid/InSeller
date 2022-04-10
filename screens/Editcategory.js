@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "../colors";
@@ -14,25 +15,38 @@ import { ScrollView } from "react-native-gesture-handler";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const Editcategory = () => {
+const Editcategory = ({ route }) => {
+  const { category } = route.params;
+  const [categoryName, setCategoryName] = useState(category.name);
   return (
     <View style={styles.container}>
       <ScrollView>
         <TouchableOpacity style={styles.picture_box}>
-          <Feather name="camera" size={17} color="black" />
-          <Text
-            style={{
-              fontSize: 11,
-              fontFamily: "Poppins_300Light",
-            }}
-          >
-            Add Image
-          </Text>
+          {category.image === "" ? (
+            <>
+              <Feather name="camera" size={17} color="black" />
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontFamily: "Poppins_300Light",
+                }}
+              >
+                Add Image
+              </Text>
+            </>
+          ) : (
+            <Image
+              source={{ uri: category.image }}
+              style={{ width: "95%", height: "95%" }}
+            />
+          )}
         </TouchableOpacity>
         <View style={styles.input_container}>
           <Input
             label="Category name"
             placeholder="Category name"
+            value={categoryName}
+            onChangeText={(text) => setCategoryName(text)}
             inputStyle={styles.inputStyle}
             containerStyle={styles.textInput}
             labelStyle={styles.textInput_label}

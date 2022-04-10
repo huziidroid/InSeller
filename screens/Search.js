@@ -6,13 +6,13 @@ import * as Location from "expo-location";
 import { Input } from "react-native-elements";
 
 const Search = ({ navigation }) => {
-  const [region, setRegion] = useState(null);
   const initialRegion = {
     latitude: 30.3753,
     longitude: 69.3451,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
+  const [region, setRegion] = useState(initialRegion);
 
   useEffect(() => {
     (async () => {
@@ -56,7 +56,7 @@ const Search = ({ navigation }) => {
         showsUserLocation={true}
         loadingEnabled={true}
         onRegionChange={(region) => setRegion(region)}
-        initialRegion={initialRegion}
+        initialRegion={region}
       >
         <Marker
           coordinate={region ? region : initialRegion}
