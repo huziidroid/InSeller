@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { Button } from "react-native-elements";
 
 const OrderDescription = (props) => {
   const navigation = useNavigation();
@@ -11,14 +13,15 @@ const OrderDescription = (props) => {
         justifyContent: "space-between",
         alignItems: "center",
         marginLeft: 20,
-        marginRight: 20,
+        // marginRight: 20,
         marginBottom: 5,
         marginTop: 10,
         backgroundColor: "#FFFFFF",
         paddingLeft: 30,
         paddingRight: 30,
         borderRadius: 10,
-        height: 50,
+        height: 60,
+        width: "90%",
         elevation: 3,
       }}
       activeOpacity={0.5}

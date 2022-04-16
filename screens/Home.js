@@ -12,6 +12,7 @@ import { Entypo } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-root-toast";
+import OrderDescription from "../components/OrderDescription";
 
 const Home = ({ navigation }) => {
   const [showSales, setShowSales] = useState(true);
@@ -122,7 +123,7 @@ const Home = ({ navigation }) => {
                 setShowSales(false);
               }}
             />
-            <Chip title="Store Views" containerStyle={styles.chip} />
+            {/* <Chip title="Store Views" containerStyle={styles.chip} /> */}
           </ScrollView>
           {showSales ? (
             <Animatable.View animation="pulse">
@@ -135,22 +136,29 @@ const Home = ({ navigation }) => {
             </Animatable.View>
           ) : null}
           <View>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
-            <Text style={styles.title}>Recent Orders</Text>
+            <Text
+              style={{
+                fontFamily: "Poppins_700Bold",
+                fontSize: 15,
+              }}
+            >
+              Recent Orders
+            </Text>
+            <OrderDescription
+              orderNumber="101-0002347"
+              itemCount="10"
+              orderAmount="200"
+            />
+            <OrderDescription
+              orderNumber="101-0002348"
+              itemCount="5"
+              orderAmount="1000"
+            />
+            <OrderDescription
+              orderNumber="101-0002348"
+              itemCount="5"
+              orderAmount="1000"
+            />
           </View>
         </ScrollView>
       </View>
