@@ -21,10 +21,10 @@ export const _getLocationAsync = async () => {
   }
 };
 
-export const storeLocation = (dispatch) => {
+export const storeLocation = (setLocation) => {
   _getLocationAsync()
     .then((location) => {
-      dispatch(userLocation(location));
+      setLocation(location);
     })
     .catch((error) => {
       Alert.alert(
@@ -37,7 +37,7 @@ export const storeLocation = (dispatch) => {
               _getLocationAsync()
                 .then((location) => {
                   if (location) {
-                    dispatch(userLocation(location));
+                    setLocation(location);
                   }
                 })
                 .catch((err) => {

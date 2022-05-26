@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -8,11 +8,16 @@ import * as Animatable from "react-native-animatable";
 import { Colors } from "../colors";
 import { Picker } from "@react-native-picker/picker";
 import Toast from "react-native-root-toast";
-import { getCategories } from "../redux/StoreCategory/action";
-import { SignUp } from "../redux/User/user.action";
-import { connect } from "react-redux";
+import {
+  useGetStoreCategoriesQuery,
+  useSignUpMutation,
+} from "../redux/slice/apiSlice";
+import { authSignUp } from "../api/middlewares/user.middleware";
+import { storeLocation } from "../components/user-location";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/slice/userSlice";
 
-const Signup = ({ user, store_categories, getCategories, SignUp }) => {
+const Signup = () => {
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -21,49 +26,66 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
   const [address, setAddress] = useState("");
   const [category, setCategory] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [location, setLocation] = useState(null);
+  const { data: categories, isSuccess: categorySuccess } =
+    useGetStoreCategoriesQuery();
+  const [signUp, { isLoading, isError, error, data, isSuccess }] =
+    useSignUpMutation();
 
+  const dispatch = useDispatch();
+  const handleSignUp = async () => {
+    const validation = authSignUp(
+      name,
+      phone,
+      address,
+      location,
+      category,
+      password
+    );
+    if (validation.status) {
+      await signUp({
+        name: name,
+        phone_number: phone,
+        address: address,
+        location: location,
+        category_id: category,
+        password: password,
+      });
+    } else {
+      Toast.show(validation.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+    }
+  };
   useEffect(() => {
-    getCategories();
+    storeLocation(setLocation);
   }, []);
-
   useEffect(() => {
-    if (store_categories.error) {
-      Toast.show(store_categories.errorMessage, {
+    if (isSuccess) {
+      Toast.show(data.message, {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
         shadow: true,
         animation: true,
       });
-    }
-  }, [store_categories.error]);
-
-  useEffect(() => {
-    if (user.error) {
-      Toast.show(user.errorMessage, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-      });
-    }
-  }, [user.error, user.errorMessage]);
-
-  useEffect(() => {
-    if (Object.keys(user.user).length > 0) {
-      Toast.show("Online Store Created Successfully", {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-      });
+      dispatch(setUser(data.user));
       navigation.reset({
         index: 0,
         routes: [{ name: "drawer" }],
       });
-      // navigation.navigate("drawer");
     }
-  }, [user.user]);
-
+    if (isError) {
+      Toast.show(error.data.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+    }
+  }, [isSuccess, isError]);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -80,7 +102,6 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
             onChangeText={(text) => setName(text)}
             placeholder="Your store name"
           />
-
           <Input
             keyboardType="phone-pad"
             style={styles.textInput}
@@ -99,7 +120,6 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
             value={address}
             onChangeText={(text) => setAddress(text)}
           />
-
           <Text
             style={[
               styles.textInput_label,
@@ -127,13 +147,15 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
               onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
             >
               <Picker.Item label="Select Store Type" value={0} />
-              {store_categories.categories.map((category, key) => (
-                <Picker.Item
-                  key={key}
-                  label={category.name}
-                  value={category.id}
-                />
-              ))}
+              {categorySuccess
+                ? categories.categories.map((category, key) => (
+                    <Picker.Item
+                      key={key}
+                      label={category.name}
+                      value={category.id}
+                    />
+                  ))
+                : null}
             </Picker>
           </View>
 
@@ -177,23 +199,12 @@ const Signup = ({ user, store_categories, getCategories, SignUp }) => {
             onChangeText={(text) => setConfirmPassword(text)}
           />
           <Button
+            loading={isLoading}
             title="Create Store"
             buttonStyle={styles.button}
             onPress={() => {
               if (password === confirmPassword) {
-                SignUp(name, phone, address, user.location, category, password);
-                if (!user.isLoading) {
-                  if (user.error) {
-                    Toast.show(user.errorMessage, {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                      delay: 0,
-                    });
-                  }
-                }
+                handleSignUp();
               } else {
                 Toast.show("Password does not match", {
                   duration: Toast.durations.LONG,
@@ -269,18 +280,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    store_categories: state.store_categories,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    SignUp: (name, phone, address, location, category, password) =>
-      dispatch(SignUp(name, phone, address, location, category, password)),
-    getCategories: () => dispatch(getCategories()),
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     user: state.user,
+//     store_categories: state.store_categories,
+//   };
+// };
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     SignUp: (name, phone, address, location, category, password) =>
+//       dispatch(SignUp(name, phone, address, location, category, password)),
+//     getCategories: () => dispatch(getCategories()),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+// export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default Signup;

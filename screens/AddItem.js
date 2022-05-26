@@ -16,17 +16,17 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import * as ImagePicker from "expo-image-picker";
-import { addItem } from "../redux/Items/item.action";
+// import { addItem } from "../redux/Items/item.action";
 import Toast from "react-native-root-toast";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const AddItem = () => {
-  const categories = useSelector((state) => state.categories);
-  const store = useSelector((state) => state.user);
-  const items = useSelector((state) => state.items);
-  const dispatch = useDispatch();
+  // const categories = useSelector((state) => state.categories);
+  // const store = useSelector((state) => state.user);
+  // const items = useSelector((state) => state.items);
+  // const dispatch = useDispatch();
   const [unit, setUnit] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [CategoryId, setCategoryId] = React.useState(0);
@@ -36,7 +36,7 @@ const AddItem = () => {
   const [base64, setBase64] = React.useState([]);
   const categoryOptions = [
     "Add New Category",
-    ...categories.categories.map((category) => category.name),
+    // ...categories.categories.map((category) => category.name),
   ];
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -61,32 +61,32 @@ const AddItem = () => {
     }
   };
 
-  useEffect(() => {
-    if (items.error) {
-      Toast.show(items.errorMessage, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-    }
-  }, [items.error]);
+  // useEffect(() => {
+  //   if (items.error) {
+  //     Toast.show(items.errorMessage, {
+  //       duration: Toast.durations.SHORT,
+  //       position: Toast.positions.BOTTOM,
+  //       shadow: true,
+  //       animation: true,
+  //       hideOnPress: true,
+  //       delay: 0,
+  //     });
+  //   }
+  // }, [items.error]);
 
-  useEffect(() => {
-    if (items.successMessage.length > 0) {
-      Toast.show(items.successMessage, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-      navigation.goBack();
-    }
-  }, [items.successMessage]);
+  // useEffect(() => {
+  //   if (items.successMessage.length > 0) {
+  //     Toast.show(items.successMessage, {
+  //       duration: Toast.durations.SHORT,
+  //       position: Toast.positions.BOTTOM,
+  //       shadow: true,
+  //       animation: true,
+  //       hideOnPress: true,
+  //       delay: 0,
+  //     });
+  //     navigation.goBack();
+  //   }
+  // }, [items.successMessage]);
 
   return (
     <View style={styles.container}>
@@ -147,12 +147,11 @@ const AddItem = () => {
                     navigation.navigate("Category-Add");
                   } else {
                     setCategory(categoryOptions[buttonIndex]);
-                    setCategoryId(
-                      categories.categories.find(
-                        (category) =>
-                          category.name === categoryOptions[buttonIndex]
-                      ).id
-                    );
+                    setCategoryId();
+                    // categories.categories.find(
+                    //   (category) =>
+                    //     category.name === categoryOptions[buttonIndex]
+                    // ).id
                   }
                 }
               );
@@ -266,22 +265,22 @@ const AddItem = () => {
               ]}
               title="Add Item"
               onPress={() => {
-                dispatch(
-                  addItem(
-                    name,
-                    CategoryId,
-                    description,
-                    unit,
-                    sellingPrice,
-                    discountPrice,
-                    costPrice,
-                    quantity,
-                    store.user.id,
-                    store.token,
-                    images,
-                    base64
-                  )
-                );
+                // dispatch(
+                //   addItem(
+                //     name,
+                //     CategoryId,
+                //     description,
+                //     unit,
+                //     sellingPrice,
+                //     discountPrice,
+                //     costPrice,
+                //     quantity,
+                //     store.user.id,
+                //     store.token,
+                //     images,
+                //     base64
+                //   )
+                // );
               }}
             />
           </View>

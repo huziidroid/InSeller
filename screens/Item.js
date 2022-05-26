@@ -15,18 +15,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
-import { setItems } from "../redux/Items/item.action";
 import Toast from "react-native-root-toast";
 import { useIsFocused } from "@react-navigation/native";
 
 const Item = () => {
-  const store = useSelector((state) => state.user);
-  const items = useSelector((state) => state.items);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(true);
   const [show, setShow] = useState(true);
   const itemRef = React.useRef();
-  const dispatch = useDispatch();
 
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -39,30 +35,11 @@ const Item = () => {
 
   useEffect(() => {
     loadItemsData();
-    // console.log(items);
   }, []);
-  useEffect(() => {
-    if (items.isLoading) {
-      //alert("getting");
-    }
-  }, [items.isLoading]);
 
-  useEffect(() => {
-    if (items.error) {
-      Toast.show(items.errorMessage, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
-    }
-  }, [items.error]);
   const loadItemsData = () => {
-    dispatch(setItems(store.user.id));
-    setFilteredDataSource(items.items);
-    setMasterDataSource(items.items);
+    // setFilteredDataSource(items.items);
+    // setMasterDataSource(items.items);
     setRefreshing(false);
   };
 
@@ -172,7 +149,7 @@ const Item = () => {
           onChangeText={(text) => searchFilterFunction(text)}
           value={search}
           underlineColorAndroid="transparent"
-          placeholder={`${items.items.length} Items (Search by Item name)`}
+          // placeholder={`${items.items.length} Items (Search by Item name)`}
         />
         <TouchableOpacity onPress={() => itemRef.current.focus()}>
           <Feather

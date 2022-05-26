@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Share } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -13,16 +13,17 @@ import { useSelector } from "react-redux";
 import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-root-toast";
 import OrderDescription from "../components/OrderDescription";
+import { selectUser } from "../redux/slice/userSlice";
 
 const Home = ({ navigation }) => {
   const [showSales, setShowSales] = useState(true);
   const [showOrders, setShowOrders] = useState(false);
-  const user = useSelector((state) => state.user);
-  const url = `https://${user.user.url_name}.inseller.netlify.app`;
+  const user = useSelector(selectUser);
+  const url = `https://inseller.netlify.app`;
   const onShare = async () => {
     await Share.share({
-      message: `Hi, you can now order from ${user.user.name} web store.\n\nContact us at ${user.user.phone_number} for more details.\n\n${url}`,
-      title: `${user.user.name} Web Store`,
+      message: `Hi, you can now order from ${user.name} web store.\n\nContact us at ${user.phone_number} for more details.\n\n${url}`,
+      title: `${user.name} Web Store`,
     })
       .then(() => {
         // Success
@@ -50,7 +51,9 @@ const Home = ({ navigation }) => {
         });
       });
   };
-
+  useEffect(() => {
+    console.log(user.name);
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -62,7 +65,7 @@ const Home = ({ navigation }) => {
             width: "50%",
           }}
         >
-          <Text style={styles.header_label}>{user.user.name}</Text>
+          <Text style={styles.header_label}>{user.name}</Text>
         </View>
         <Avatar rounded title="MB" />
       </View>

@@ -14,37 +14,39 @@ import { Avatar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { useSelector, useDispatch } from "react-redux";
-import { setCategories } from "../redux/Categories/category.action";
-import { useIsFocused } from "@react-navigation/native";
+import { useGetCategoriesQuery } from "../redux/slice/apiSlice";
+import { useFocusEffect } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/slice/userSlice";
 
 const Category = () => {
-  const store = useSelector((state) => state.user);
-  const categories = useSelector((state) => state.categories);
   const navigation = useNavigation();
-  const [refreshing, setRefreshing] = useState(true);
   const [show, setShow] = useState(true);
   const searchRef = React.useRef();
-  const dispatch = useDispatch();
-  const isFocused = useIsFocused();
-
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
+  const user = useSelector(selectUser);
+  const {
+    data: categories,
+    isSuccess,
+    isLoading,
+    isError,
+    error,
+  } = useGetCategoriesQuery(user.id);
 
   useEffect(() => {
-    loadCategoriesData();
-  }, []);
-  useEffect(() => {
-    loadCategoriesData();
-  }, [isFocused]);
+    if (isSuccess) {
+      loadCategoriesData();
+    }
+    if (isError) {
+      console.log(error);
+    }
+  }, [isSuccess, isError]);
 
   const loadCategoriesData = () => {
-    dispatch(setCategories(store.user.id));
     setFilteredDataSource(categories.categories);
     setMasterDataSource(categories.categories);
-
-    setRefreshing(false);
   };
 
   const searchFilterFunction = (text) => {
@@ -141,7 +143,7 @@ const Category = () => {
           value={search}
           ref={searchRef}
           underlineColorAndroid="transparent"
-          placeholder={`${categories.categories.length} Categories (Search by name)`}
+          placeholder={"Search by category name"}
         />
         <TouchableOpacity onPress={() => searchRef.current.focus()}>
           <Feather
@@ -159,7 +161,7 @@ const Category = () => {
         renderItem={CategoryView}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={isLoading}
             onRefresh={loadCategoriesData}
           />
         }

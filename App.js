@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./Navigation/RootNavigator";
 import { Colors } from "./colors";
 import { Provider } from "react-redux";
-import store from "./redux/store";
+import { store } from "./redux/store";
 
 import {
   useFonts,

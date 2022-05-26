@@ -6,18 +6,20 @@ import Main from "../screens/Main";
 import AddItem from "../screens/AddItem";
 import Signup from "../screens/Signup";
 import DrawerNavigator from "./DrawerNavigator";
-const Root = createNativeStackNavigator();
-import { useSelector } from "react-redux";
+
+// import { useSelector } from "react-redux";
 import AddCategory from "../screens/AddCategory";
 import EditItem from "../screens/EditItem";
 import Editcategory from "../screens/Editcategory";
+const Root = createNativeStackNavigator();
 
 const RootNavigator = () => {
-  const user = useSelector((state) => state.user.user);
+  // const user = useSelector((state) => state.user.user);
 
   return (
     <Root.Navigator
-      initialRouteName={Object.keys(user).length === 0 ? "Main" : "drawer"}
+      // initialRouteName={Object.keys(user).length === 0 ? "Main" : "drawer"}
+      initialRouteName="Main"
     >
       <Root.Screen
         name="Main"

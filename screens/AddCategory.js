@@ -12,22 +12,23 @@ import { Colors } from "../colors";
 import { Input, Button } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
-import { useSelector, useDispatch } from "react-redux";
 import Toast from "react-native-root-toast";
 import { useNavigation } from "@react-navigation/native";
-import { addCategory } from "../redux/Categories/category.action";
+import { validateCategory } from "../api/middlewares/category.middleware";
+import { useAddCategoryMutation } from "../redux/slice/apiSlice";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/slice/userSlice";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 function AddCategory() {
   const navigation = useNavigation();
-  const [image, setImage] = useState("");
-  const [base64, setBase64] = useState("");
+  const [image, setImage] = useState({});
   const [categoryName, setCategoryName] = useState("");
-  const store = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories);
+  const [AddCategory, { isError, isLoading, isSuccess, error, data }] =
+    useAddCategoryMutation();
+  const user = useSelector(selectUser);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -39,57 +40,55 @@ function AddCategory() {
       base64: true,
     });
     if (!result.cancelled) {
-      // console.log(result);
-      setImage(result.uri);
-      setBase64(`data:image/jpg;base64,${result.base64}`);
+      setImage({
+        uri: result.uri,
+        name: "Cateogry.jpg",
+        type: "image/jpg",
+      });
     }
   };
 
-  // useEffect(() => {
-  //   if (categories.isLoading) {
-  //     Toast.show("Adding...", {
-  //       duration: Toast.durations.SHORT,
-  //       position: Toast.positions.BOTTOM,
-  //       shadow: true,
-  //       animation: true,
-  //       hideOnPress: true,
-  //       delay: 0,
-  //     });
-  //   }
-  // }, [categories.isLoading]);
-
-  useEffect(() => {
-    if (categories.errorMessage.length > 0) {
-      Toast.show(categories.errorMessage, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
+  const handleAddCategory = async (name, image) => {
+    const validate = validateCategory(name);
+    if (validate.status) {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("store_id", user.id);
+      if (Object.keys(image).length > 0) {
+        formData.append("image", image);
+      }
+      await AddCategory({ data: formData, token: user.accessToken });
+    } else {
+      Toast.show(validate.message);
     }
-  }, [categories.error]);
+  };
 
   useEffect(() => {
-    if (categories.successMessage.length > 0) {
-      Toast.show(categories.successMessage, {
-        duration: Toast.durations.SHORT,
+    if (isSuccess) {
+      Toast.show(data.message, {
+        duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
         shadow: true,
         animation: true,
-        hideOnPress: true,
-        delay: 0,
       });
       navigation.goBack();
     }
-  }, [categories.successMessage]);
+    if (isError) {
+      console.log(error);
+      Toast.show(error.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+      });
+    }
+  }, [isSuccess, isError]);
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <TouchableOpacity style={styles.picture_box} onPress={pickImage}>
-          {image === "" ? (
+          {Object.keys(image).length === 0 ? (
             <>
               <Feather name="camera" size={17} color="black" />
               <Text
@@ -103,7 +102,7 @@ function AddCategory() {
             </>
           ) : (
             <Image
-              source={{ uri: image }}
+              source={{ uri: image.uri }}
               style={{ width: "95%", height: "95%" }}
             />
           )}
@@ -121,20 +120,12 @@ function AddCategory() {
           />
 
           <Button
+            loading={isLoading}
             containerStyle={styles.btn_container_style}
             buttonStyle={[styles.button, { backgroundColor: Colors.secondary }]}
             title="Add Category"
             onPress={() => {
-              dispatch(
-                addCategory(
-                  store.user.id,
-                  store.token,
-                  categoryName,
-                  image,
-                  base64
-                )
-              );
-              setCategoryName("");
+              handleAddCategory(categoryName, image);
             }}
           />
         </View>

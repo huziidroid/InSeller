@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,10 @@ import { Feather } from "@expo/vector-icons";
 import { Colors } from "../colors";
 import { Input, Button } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-root-toast";
+import { useNavigation } from "@react-navigation/native";
+import { validateCategory } from "../api/middlewares/category.middleware";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -18,11 +22,73 @@ const windowHeight = Dimensions.get("window").height;
 const Editcategory = ({ route }) => {
   const { category } = route.params;
   const [categoryName, setCategoryName] = useState(category.name);
+  const [image, setImage] = useState({});
+  const [isImageSelected, setIsImageSelected] = useState(false);
+  const [IsCategoryNameChanged, setIsCategoryNameChanged] = useState(false);
+  const [isEditDisable, setIsEditDisable] = useState(true);
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+    if (!result.cancelled) {
+      setImage({
+        uri: result.uri,
+        name: "Cateogry.jpg",
+        type: "image/jpg",
+      });
+      setIsImageSelected(true);
+    }
+  };
+  const handleCategoryNameChange = (text) => {
+    setCategoryName(text);
+    setIsCategoryNameChanged(true);
+    if (text === category.name) {
+      setIsCategoryNameChanged(false);
+    }
+  };
+  const handleEditCategory = async (name, image) => {
+    const validate = validateCategory(name);
+    if (validate.status) {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("id", category.id);
+      if (isImageSelected) {
+        formData.append("image", image);
+      }
+      // await AddCategory({ data: formData, token: user.accessToken });
+      
+    } else {
+      Toast.show(validate.message);
+    }
+  };
+
+  useEffect(() => {
+    if (category.image) {
+      setImage({
+        uri: category.image,
+        name: "Cateogry.jpg",
+        type: "image/jpg",
+      });
+    }
+  }, []);
+  useEffect(() => {
+    if (IsCategoryNameChanged || isImageSelected) {
+      setIsEditDisable(false);
+    } else {
+      setIsEditDisable(true);
+    }
+  }, [isImageSelected, IsCategoryNameChanged]);
+
   return (
     <View style={styles.container}>
       <ScrollView>
-        <TouchableOpacity style={styles.picture_box}>
-          {category.image === "" ? (
+        <TouchableOpacity style={styles.picture_box} onPress={pickImage}>
+          {Object.keys(image).length === 0 ? (
             <>
               <Feather name="camera" size={17} color="black" />
               <Text
@@ -36,7 +102,7 @@ const Editcategory = ({ route }) => {
             </>
           ) : (
             <Image
-              source={{ uri: category.image }}
+              source={{ uri: image.uri }}
               style={{ width: "95%", height: "95%" }}
             />
           )}
@@ -46,7 +112,7 @@ const Editcategory = ({ route }) => {
             label="Category name"
             placeholder="Category name"
             value={categoryName}
-            onChangeText={(text) => setCategoryName(text)}
+            onChangeText={handleCategoryNameChange}
             inputStyle={styles.inputStyle}
             containerStyle={styles.textInput}
             labelStyle={styles.textInput_label}
@@ -60,12 +126,14 @@ const Editcategory = ({ route }) => {
               titleStyle={{ color: Colors.textDanger }}
             />
             <Button
+              disabled={isEditDisable}
               containerStyle={styles.btn_container_style}
               buttonStyle={[
                 styles.button,
                 { backgroundColor: Colors.secondary },
               ]}
               title="Edit Category"
+              onPress={() => handleEditCategory(categoryName, image)}
             />
           </View>
         </View>

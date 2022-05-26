@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -11,27 +11,44 @@ import { useSelector, useDispatch } from "react-redux";
 import { Drawer } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import DefaultImage from "../assets/default.jpg";
-import { signOut } from "../redux/User/user.action";
+import { setUser, selectUser } from "../redux/slice/userSlice";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CustomDrawer = ({ ...props }) => {
-  const user = useSelector((state) => state.user);
-  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
+  const handleSignOut = async () => {
+    try {
+      await AsyncStorage.removeItem("@user");
+      dispatch(setUser({}));
+      props.navigation.dispatch(DrawerActions.closeDrawer());
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "login" }],
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
         <Avatar
           size="large"
           source={
-            user.user.business_image_url !== null
-              ? { uri: user.user.business_image_url }
+            user.business_image_url !== null
+              ? { uri: user.business_image_url }
               : DefaultImage
           }
           rounded
         />
-        <Text style={styles.profile_label}>{user.user.name}</Text>
-        <Text style={styles.profile_categgory}>The Book Shop</Text>
+        <Text style={styles.profile_label}>{user.name}</Text>
+        <Text style={styles.profile_category}>
+          {user.category ? user.category.name : "Shop"}
+        </Text>
       </View>
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
@@ -51,14 +68,7 @@ const CustomDrawer = ({ ...props }) => {
               Logout
             </Text>
           }
-          onPress={() => {
-            props.navigation.dispatch(DrawerActions.closeDrawer());
-            dispatch(signOut());
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "login" }],
-            });
-          }}
+          onPress={handleSignOut}
         />
       </Drawer.Section>
     </View>
@@ -87,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Poppins_500Medium",
   },
-  profile_categgory: {
+  profile_category: {
     fontSize: 15,
     fontFamily: "Poppins_300Light",
   },
