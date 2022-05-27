@@ -1,20 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { Button, Input, Divider, CheckBox } from "react-native-elements";
-import * as Animatable from "react-native-animatable";
-import { Colors } from "../colors";
-import { useSignInMutation } from "../redux/slice/apiSlice";
-import { authSignIn } from "../api/middlewares/user.middleware";
+import { Divider, CheckBox } from "react-native-elements";
+import { Colors } from "../../colors";
+import { useSignInMutation } from "../../redux/slice/apiSlice";
+import { authSignIn } from "../../api/middlewares/user.middleware";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/slice/userSlice";
+import { setUser } from "../../redux/slice/userSlice";
+import {
+  Container,
+  FooterWrapper,
+  HeaderText,
+  HeaderWrapper,
+  StyledSignInButton,
+  StyledSignUpButton,
+  StyledInput,
+  StyledInputTitle,
+} from "./styles";
 
-const Login = () => {
-  const navigation = useNavigation();
+const Login = ({ navigation }) => {
   const [visible, setVisible] = useState(true);
   const passwordRef = useRef();
   const [checked, setChecked] = useState(false);
@@ -89,52 +96,50 @@ const Login = () => {
     }
   }, [isSuccess, isError]);
 
+  const renderRightIcon = () => (
+    <TouchableOpacity>
+      {visible ? (
+        <MaterialCommunityIcons
+          name="seed-off-outline"
+          size={17}
+          onPress={() => setVisible(!visible)}
+          color="black"
+        />
+      ) : (
+        <MaterialCommunityIcons
+          name="seed-outline"
+          size={17}
+          onPress={() => setVisible(!visible)}
+          color="black"
+        />
+      )}
+    </TouchableOpacity>
+  );
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.header_label}>SignIn to store</Text>
-      </View>
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
+    <Container>
+      <HeaderWrapper>
+        <HeaderText>SignIn to store</HeaderText>
+      </HeaderWrapper>
+      <FooterWrapper animation="fadeInUpBig">
         <ScrollView>
-          <Input
+          <StyledInput
             keyboardType="phone-pad"
-            style={styles.textInput}
-            label="Phone number"
-            labelStyle={styles.textInput_label}
+            label={<StyledInputTitle>Phone number</StyledInputTitle>}
             placeholder="Enter you mobile number"
             value={phone}
             onChangeText={(text) => setPhone(text)}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()}
           />
-          <Input
+          <StyledInput
             keyboardType="twitter"
-            style={styles.textInput}
             secureTextEntry={visible}
-            label="Password"
+            label={<StyledInputTitle>Password</StyledInputTitle>}
             value={password}
             onChangeText={(text) => setPassword(text)}
             ref={passwordRef}
-            rightIcon={
-              <TouchableOpacity>
-                {visible ? (
-                  <MaterialCommunityIcons
-                    name="seed-off-outline"
-                    size={17}
-                    onPress={() => setVisible(!visible)}
-                    color="black"
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="seed-outline"
-                    size={17}
-                    onPress={() => setVisible(!visible)}
-                    color="black"
-                  />
-                )}
-              </TouchableOpacity>
-            }
-            labelStyle={styles.textInput_label}
+            rightIcon={renderRightIcon}
             placeholder="Enter password"
           />
           <CheckBox
@@ -143,76 +148,42 @@ const Login = () => {
             checkedColor={Colors.secondary}
             onPress={() => setChecked(!checked)}
           />
-          <Button
+          <StyledSignInButton
             title="SignIn"
             loading={isLoading}
-            buttonStyle={styles.button}
+            buttonStyle={styles.signInButton}
             onPress={() => {
               handleLogin(phone, password);
             }}
-          ></Button>
+          ></StyledSignInButton>
           <Divider inset={true} insetType="middle" />
-          <Button
+          <StyledSignUpButton
             title="Signup"
             type="outline"
-            buttonStyle={{
-              borderRadius: 10,
-              height: 50,
-              marginVertical: 15,
-              marginHorizontal: 10,
-            }}
+            buttonStyle={styles.signUpButton}
             onPress={() => {
               navigation.navigate("signup");
             }}
-          ></Button>
+          ></StyledSignUpButton>
         </ScrollView>
-      </Animatable.View>
-    </View>
+      </FooterWrapper>
+    </Container>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.secondary,
-  },
-  header: {
-    flex: 1,
-    backgroundColor: Colors.secondary,
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-    justifyContent: "flex-end",
-  },
-  footer: {
-    flex: 3,
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-  },
-  header_label: {
-    fontSize: 25,
-    fontFamily: "Poppins_700Bold",
-    color: Colors.primary,
-  },
-  textInput: {
-    flex: 1,
-    fontSize: 17,
-    fontFamily: "Poppins_400Regular",
-    marginVertical: 5,
-    height: 50,
-  },
-  textInput_label: {
-    color: Colors.textColor,
-    fontFamily: "Poppins_400Regular",
-  },
-  button: {
+  signInButton: {
     backgroundColor: Colors.secondary,
     marginTop: 40,
     height: 50,
     borderRadius: 10,
     marginBottom: 15,
+    marginHorizontal: 10,
+  },
+  signUpButton: {
+    borderRadius: 10,
+    height: 50,
+    marginVertical: 15,
     marginHorizontal: 10,
   },
 });

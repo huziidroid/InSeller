@@ -7,7 +7,7 @@ import { Colors } from "../colors";
 import * as Animatable from "react-native-animatable";
 import Icon, { Icons } from "../components/Icons";
 
-import Home from "../screens/Home";
+import Home from "../screens/Home/Home";
 import CategoryNavigator from "./CategoryNavigator.js";
 const Tab = createBottomTabNavigator();
 

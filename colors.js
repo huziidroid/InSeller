@@ -9,4 +9,5 @@ export const Colors = {
   textColor: "#1B262C",
   textDanger: "#D32F2F",
   drawerLabel: "rgba(59, 89, 152, 0.1)",
+  chart: "rgba(59, 89, 152, 0.2)",
 };

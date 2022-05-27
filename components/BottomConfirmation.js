@@ -4,18 +4,18 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../colors";
 import { useDispatch } from "react-redux";
-import { signOut } from "../redux/User/user.action";
+// import { signOut } from "../redux/User/user.action";
 
 const BottomConfirmation = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(signOut());
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "login" }],
-    });
-  };
+  // const handleLogout = () => {
+  //   dispatch(signOut());
+  //   navigation.reset({
+  //     index: 0,
+  //     routes: [{ name: "login" }],
+  //   });
+  // };
   return (
     <View>
       <Text
@@ -39,7 +39,7 @@ const BottomConfirmation = () => {
         <Button
           title="Yes"
           color={Colors.secondary}
-          onPress={handleLogout}
+          // onPress={handleLogout}
         ></Button>
       </View>
     </View>

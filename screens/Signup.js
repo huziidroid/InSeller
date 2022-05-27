@@ -13,7 +13,7 @@ import {
   useSignUpMutation,
 } from "../redux/slice/apiSlice";
 import { authSignUp } from "../api/middlewares/user.middleware";
-import { storeLocation } from "../components/user-location";
+// import { storeLocation } from "../components/user-location";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/slice/userSlice";
 
@@ -60,9 +60,9 @@ const Signup = () => {
       });
     }
   };
-  useEffect(() => {
-    storeLocation(setLocation);
-  }, []);
+  // useEffect(() => {
+  //   storeLocation(setLocation);
+  // }, []);
   useEffect(() => {
     if (isSuccess) {
       Toast.show(data.message, {
