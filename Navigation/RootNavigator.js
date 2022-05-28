@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OrderDetails from "../screens/OrderDetails";
 import Login from "../screens/Login/Login";
 import Main from "../screens/Main/Main";
-import AddItem from "../screens/AddItem";
+import AddItem from "../screens/AddItem/AddItem";
 import Signup from "../screens/Signup/Signup";
 import DrawerNavigator from "./DrawerNavigator";
 
@@ -51,10 +51,26 @@ const RootNavigator = () => {
       />
 
       <Root.Screen name="OrderDetails" component={OrderDetails} />
-      <Root.Screen name="Item-Add" component={AddItem} />
-      <Root.Screen name="Item-Edit" component={EditItem} />
-      <Root.Screen name="Category-Add" component={AddCategory} />
-      <Root.Screen name="Category-Edit" component={Editcategory} />
+      <Root.Screen
+        name="Item-Add"
+        component={AddItem}
+        options={{ headerTitle: "Add Item" }}
+      />
+      <Root.Screen
+        name="Item-Edit"
+        component={EditItem}
+        options={{ headerTitle: "Edit Item" }}
+      />
+      <Root.Screen
+        name="Category-Add"
+        component={AddCategory}
+        options={{ headerTitle: "Add Category" }}
+      />
+      <Root.Screen
+        name="Category-Edit"
+        component={Editcategory}
+        options={{ headerTitle: "Edit Category" }}
+      />
     </Root.Navigator>
   );
 };

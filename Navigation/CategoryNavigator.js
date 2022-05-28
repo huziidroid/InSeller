@@ -19,7 +19,7 @@ const CategoryNavigator = () => {
           headerTitle: "Categories",
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Add-Category")}
+              onPress={() => navigation.navigate("Category-Add")}
               style={{
                 marginRight: 10,
               }}
@@ -29,7 +29,6 @@ const CategoryNavigator = () => {
           ),
         }}
       />
-      <Stack.Screen name="Add-Category" component={AddCategory} />
     </Stack.Navigator>
   );
 };
