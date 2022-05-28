@@ -28,3 +28,7 @@ export interface UploadCategory {
   data: FormData;
   token: string;
 }
+export interface DeleteCategory {
+  id: number;
+  token: string;
+}

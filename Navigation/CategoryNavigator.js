@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Category from "../screens/Category";
+import Category from "../screens/CategoryList/Category";
 import { Ionicons } from "@expo/vector-icons";
 const Stack = createNativeStackNavigator();
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Colors } from "../colors";
-import AddCategory from "../screens/AddCategory";
+import AddCategory from "../screens/AddCategory/AddCategory";
 
 const CategoryNavigator = () => {
   const navigation = useNavigation();

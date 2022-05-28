@@ -1,11 +1,10 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { SafeAreaView, Platform } from "react-native";
+import { SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./Navigation/RootNavigator";
-import { Colors } from "./colors";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import Toast from "react-native-toast-message";
 
 import {
   useFonts,
@@ -16,7 +15,6 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import AppLoading from "expo-app-loading";
-import { RootSiblingParent } from "react-native-root-siblings";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 export default function App() {
@@ -33,19 +31,16 @@ export default function App() {
     return (
       <Provider store={store}>
         <NavigationContainer>
-          <RootSiblingParent>
-            <ActionSheetProvider>
-              <SafeAreaView
-                style={{
-                  flex: 1,
-                  paddingTop: Platform.OS === "android" ? 24 : 0,
-                }}
-              >
-                <RootNavigator />
-                <StatusBar style="auto" backgroundColor={Colors.primary} />
-              </SafeAreaView>
-            </ActionSheetProvider>
-          </RootSiblingParent>
+          <ActionSheetProvider>
+            <SafeAreaView
+              style={{
+                flex: 1,
+              }}
+            >
+              <RootNavigator />
+              <Toast />
+            </SafeAreaView>
+          </ActionSheetProvider>
         </NavigationContainer>
       </Provider>
     );

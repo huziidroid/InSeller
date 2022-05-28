@@ -44,18 +44,26 @@ export const StyledInputTitle = styled.Text({
   fontWeight: "bold",
 });
 
-export const StyledSignInButton = styled(Button)({
-  backgroundColor: Colors.secondary,
-  marginTop: 40,
-  height: 50,
-  borderRadius: 10,
-  marginBottom: 15,
-  marginHorizontal: 10,
-});
+export const StyledSignInButton = styled(Button).attrs({
+  contentContainerStyle: {
+    marginBottom: 15,
+    marginHorizontal: 10,
+  },
+  buttonStyle: {
+    backgroundColor: Colors.secondary,
+    height: 50,
+    marginTop: 40,
+    borderRadius: 10,
+  },
+})``;
 
-export const StyledSignUpButton = styled(Button)({
-  borderRadius: 10,
-  height: 50,
-  marginVertical: 15,
-  marginHorizontal: 10,
-});
+export const StyledSignUpButton = styled(Button).attrs({
+  containerStyle: {
+    marginVertical: 15,
+    marginHorizontal: 10,
+  },
+  buttonStyle: {
+    borderRadius: 10,
+    height: 50,
+  },
+})``;

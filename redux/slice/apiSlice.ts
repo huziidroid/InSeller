@@ -1,11 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Category, StoreCategory, User, UploadCategory } from "./types";
+import {
+  Category,
+  StoreCategory,
+  User,
+  UploadCategory,
+  DeleteCategory,
+} from "./types";
 import { BASE_URL } from "../../api/config";
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/`,
+    baseUrl: `${BASE_URL}`,
   }),
   tagTypes: ["StoreCategory", "Category"],
   endpoints: (builder) => ({
@@ -57,7 +63,7 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
-    editCategory:builder.mutation<Category,UploadCategory>({
+    editCategory: builder.mutation<Category, UploadCategory>({
       query: (category) => ({
         url: "user/store/item/category/update-category/",
         method: "PUT",
@@ -67,7 +73,19 @@ export const apiSlice = createApi({
           "Content-Type": "multipart/form-data",
         },
       }),
-    })
+      invalidatesTags: ["Category"],
+    }),
+    deleteCategory: builder.mutation<Category, DeleteCategory>({
+      query: (category) => ({
+        url: `user/store/item/category/delete-category/${category.id}`,
+        method: "DELETE",
+        headers: {
+          "x-access-token": category.token,
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+      invalidatesTags: ["Category"],
+    }),
   }),
 });
 
@@ -79,4 +97,6 @@ export const {
   useAddItemMutation,
   useGetItemsQuery,
   useGetCategoriesQuery,
+  useEditCategoryMutation,
+  useDeleteCategoryMutation,
 } = apiSlice;

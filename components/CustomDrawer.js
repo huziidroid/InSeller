@@ -39,15 +39,15 @@ const CustomDrawer = ({ ...props }) => {
         <Avatar
           size="large"
           source={
-            user.business_image_url !== null
-              ? { uri: user.business_image_url }
+            user?.business_image_url !== null
+              ? { uri: user?.business_image_url }
               : DefaultImage
           }
           rounded
         />
-        <Text style={styles.profile_label}>{user.name}</Text>
+        <Text style={styles.profile_label}>{user?.name}</Text>
         <Text style={styles.profile_category}>
-          {user.category ? user.category.name : "Shop"}
+          {user?.category ? user?.category.name : "Shop"}
         </Text>
       </View>
       <DrawerContentScrollView {...props}>
