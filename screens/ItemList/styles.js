@@ -11,14 +11,12 @@ export const ItemSeparatorComponent = styled.View({
 export const ItemContainer = styled.View({
   flexDirection: "row",
   alignItems: "center",
-  marginLeft: 20,
-  marginRight: 20,
+  marginHorizontal: 15,
   marginBottom: 5,
   marginTop: 5,
   backgroundColor: Colors.white,
   paddingLeft: 10,
-  paddingBottom: 5,
-  paddingTop: 5,
+  paddingVertical: 10,
   borderRadius: 5,
   elevation: "3",
 });

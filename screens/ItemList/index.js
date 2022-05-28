@@ -1,12 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import { FlatList, RefreshControl } from "react-native";
 import { Colors } from "../../colors";
 import DefaultImage from "../../assets/default.jpg";
 import { Avatar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useSelector, useDispatch } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
 import {
   Container,
   ItemContainer,
@@ -27,41 +24,24 @@ const data = [
     name: "Item 1",
     status: false,
     selling_price: 100,
-    images: [
-      {
-        image:
-          "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      },
-    ],
+    image:
+      "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
   },
   {
     id: 1,
-    name: "Item 1",
+    name: "adadad",
     status: true,
     selling_price: 100,
-    images: [
-      {
-        image:
-          "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-      },
-    ],
+    image:
+      "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
   },
 ];
 
-const Item = () => {
-  const navigation = useNavigation();
+const Item = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(true);
-  const [show, setShow] = useState(true);
   const itemRef = React.useRef();
-
   const [search, setSearch] = useState("");
-  const [filteredDataSource, setFilteredDataSource] = useState([]);
-  const [masterDataSource, setMasterDataSource] = useState([]);
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    loadItemsData();
-  }, [isFocused]);
+  const [filteredDataSource, setFilteredDataSource] = useState(data);
 
   useEffect(() => {
     loadItemsData();
@@ -69,31 +49,16 @@ const Item = () => {
 
   const loadItemsData = () => {
     setFilteredDataSource(data);
-    setMasterDataSource(data);
     setRefreshing(false);
   };
 
   const searchFilterFunction = (text) => {
-    // Check if searched text is not blank
-    if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource
-      // Update FilteredDataSource
-      const newData = masterDataSource.filter(function (item) {
-        const itemData = item.name
-          ? item.itemName.toUpperCase()
-          : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredDataSource(newData);
-      setSearch(text);
-    } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(masterDataSource);
-      setSearch(text);
-    }
+    setFilteredDataSource(
+      data.filter((item) =>
+        item.name.toLowerCase().includes(text.toLowerCase())
+      )
+    );
+    setSearch(text);
   };
 
   const ItemView = ({ item }) => {

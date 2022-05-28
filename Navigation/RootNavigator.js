@@ -4,7 +4,7 @@ import OrderDetails from "../screens/OrderDetails";
 import Login from "../screens/Login/Login";
 import Main from "../screens/Main/Main";
 import AddItem from "../screens/AddItem";
-import Signup from "../screens/Signup";
+import Signup from "../screens/Signup/Signup";
 import DrawerNavigator from "./DrawerNavigator";
 
 // import { useSelector } from "react-redux";

@@ -1,6 +1,5 @@
 // import * as Location from "expo-location";
 // import { Linking, Alert, BackHandler } from "react-native";
-// // import { userLocation } from "../redux/User/user.action";
 
 // export const _getLocationAsync = async () => {
 //   let { status } = await Location.requestForegroundPermissionsAsync();
