@@ -24,11 +24,24 @@ export interface Category {
   image: string;
   store_id: number;
 }
-export interface UploadCategory {
+export interface Upload {
   data: FormData;
   token: string;
 }
-export interface DeleteCategory {
+export interface Delete {
   id: number;
   token: string;
+}
+export interface Item {
+  id: number;
+  name: string;
+  description: string;
+  selling_price: number;
+  discount_price: number;
+  unit: string;
+  cost_price: number;
+  quantity: number;
+  image: string;
+  category_id: number;
+  store_id: number;
 }

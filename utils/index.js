@@ -27,6 +27,17 @@ export const addToast = (message, isError) => {
     visibilityTime: 3000,
   });
 };
+export const getCategoryId = (categories, categoryName) => {
+  let categoryId = 0;
+  if (categories?.length > 0) {
+    categories?.forEach((category) => {
+      if (category.name === categoryName) {
+        categoryId = category.id;
+      }
+    });
+  }
+  return categoryId;
+};
 
 const _getLocationAsync = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();

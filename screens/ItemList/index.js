@@ -17,44 +17,27 @@ import {
 } from "./styles";
 import { ScreenWrapper } from "react-native-screen-wrapper";
 import { SearchInput } from "../../components";
-
-const data = [
-  {
-    id: 1,
-    name: "Item 1",
-    status: false,
-    selling_price: 100,
-    image:
-      "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-  },
-  {
-    id: 1,
-    name: "adadad",
-    status: true,
-    selling_price: 100,
-    image:
-      "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-  },
-];
+import { useGetItemsQuery } from "../../redux/slice/apiSlice";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/slice/userSlice";
 
 const Item = ({ navigation }) => {
-  const [refreshing, setRefreshing] = useState(true);
+  const user = useSelector(selectUser);
   const itemRef = React.useRef();
   const [search, setSearch] = useState("");
-  const [filteredDataSource, setFilteredDataSource] = useState(data);
+  const { data: items, isLoading, refetch } = useGetItemsQuery(user?.id);
+  const [filteredDataSource, setFilteredDataSource] = useState(items);
 
-  useEffect(() => {
-    loadItemsData();
-  }, []);
+  useEffect(() => setFilteredDataSource(items), [items]);
 
   const loadItemsData = () => {
-    setFilteredDataSource(data);
-    setRefreshing(false);
+    refetch();
+    setFilteredDataSource(items);
   };
 
   const searchFilterFunction = (text) => {
     setFilteredDataSource(
-      data.filter((item) =>
+      items.filter((item) =>
         item.name.toLowerCase().includes(text.toLowerCase())
       )
     );
@@ -101,7 +84,7 @@ const Item = ({ navigation }) => {
           ItemSeparatorComponent={ItemSeparatorComponent}
           renderItem={ItemView}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={loadItemsData} />
+            <RefreshControl refreshing={isLoading} onRefresh={loadItemsData} />
           }
         />
       </Container>

@@ -1,11 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {
-  Category,
-  StoreCategory,
-  User,
-  UploadCategory,
-  DeleteCategory,
-} from "./types";
+import { Category, StoreCategory, User, Upload, Delete, Item } from "./types";
 import { BASE_URL } from "../../api/config";
 
 export const apiSlice = createApi({
@@ -13,7 +7,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}`,
   }),
-  tagTypes: ["StoreCategory", "Category"],
+  tagTypes: ["StoreCategory", "Category", "Items"],
   endpoints: (builder) => ({
     getStoreCategories: builder.query<StoreCategory[], void>({
       query: () => "admin/store-category/get-all/",
@@ -33,17 +27,11 @@ export const apiSlice = createApi({
         body: loginDetails,
       }),
     }),
-    getItems: builder.query<Object, number>({
+    getItems: builder.query<Item[], number>({
       query: (store_id) => ({
         url: `user/store/item/get-all-items/${store_id}`,
       }),
-    }),
-    addItem: builder.mutation<Object, Object>({
-      query: (item) => ({
-        url: "user/store/item/add-item",
-        method: "POST",
-        body: item,
-      }),
+      providesTags: ["Items"],
     }),
     getCategories: builder.query<Category[], number>({
       query: (store_id) => ({
@@ -51,7 +39,7 @@ export const apiSlice = createApi({
       }),
       providesTags: ["Category"],
     }),
-    addCategory: builder.mutation<Category, UploadCategory>({
+    addCategory: builder.mutation<Category, Upload>({
       query: (category) => ({
         url: "user/store/item/category/add-category",
         method: "POST",
@@ -63,7 +51,7 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
-    editCategory: builder.mutation<Category, UploadCategory>({
+    editCategory: builder.mutation<Category, Upload>({
       query: (category) => ({
         url: "user/store/item/category/update-category/",
         method: "PUT",
@@ -75,7 +63,7 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
-    deleteCategory: builder.mutation<Category, DeleteCategory>({
+    deleteCategory: builder.mutation<Category, Delete>({
       query: (category) => ({
         url: `user/store/item/category/delete-category/${category.id}`,
         method: "DELETE",
@@ -85,6 +73,18 @@ export const apiSlice = createApi({
         },
       }),
       invalidatesTags: ["Category"],
+    }),
+    addItem: builder.mutation<Item, Upload>({
+      query: (item) => ({
+        url: "user/store/item/add-item",
+        method: "POST",
+        body: item.data,
+        headers: {
+          "x-access-token": item.token,
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+      invalidatesTags: ["Items"],
     }),
   }),
 });
