@@ -96,7 +96,7 @@ const AddItem = ({ navigation }) => {
         token: user.accessToken,
       });
       if (error) {
-        console.log(error);
+        addToast(error.data?.message, true);
       } else {
         addToast(data.message, false);
         navigation.goBack();

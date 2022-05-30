@@ -34,7 +34,7 @@ const Home = ({ navigation }) => {
   const [showSales, setShowSales] = useState(true);
   const [showOrders, setShowOrders] = useState(false);
   const user = useSelector(selectUser);
-  const url = `https://inseller.netlify.app`;
+  const url = `http://${user?.url_name}.localhost:3000/`;
   const onShare = async () => {
     await Share.share({
       message: `Hi, you can now order from ${user?.name} web store.\n\nContact us at ${user?.phone_number} for more details.\n\n${url}`,

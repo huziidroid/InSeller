@@ -9,7 +9,7 @@ import DrawerNavigator from "./DrawerNavigator";
 
 // import { useSelector } from "react-redux";
 import AddCategory from "../screens/AddCategory/AddCategory";
-import EditItem from "../screens/EditItem";
+import EditItem from "../screens/EditItem/EditItem";
 import Editcategory from "../screens/EditCategory/Editcategory";
 const Root = createNativeStackNavigator();
 

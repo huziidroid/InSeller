@@ -86,6 +86,29 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Items"],
     }),
+    editItem: builder.mutation<Item, Upload>({
+      query: (item) => ({
+        url: "user/store/item/update-item/",
+        method: "PUT",
+        body: item.data,
+        headers: {
+          "x-access-token": item.token,
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+      invalidatesTags: ["Items"],
+    }),
+    deleteItem: builder.mutation<Item, Delete>({
+      query: (item) => ({
+        url: `user/store/item/delete-item/${item.id}`,
+        method: "DELETE",
+        headers: {
+          "x-access-token": item.token,
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+      invalidatesTags: ["Items"],
+    }),
   }),
 });
 
@@ -96,6 +119,8 @@ export const {
   useAddCategoryMutation,
   useAddItemMutation,
   useGetItemsQuery,
+  useEditItemMutation,
+  useDeleteItemMutation,
   useGetCategoriesQuery,
   useEditCategoryMutation,
   useDeleteCategoryMutation,
