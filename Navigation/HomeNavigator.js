@@ -1,5 +1,5 @@
 import React from "react";
-import Order from "../screens/Order";
+
 import Home from "../screens/Home/Home";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 

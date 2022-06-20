@@ -7,7 +7,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${BASE_URL}`,
   }),
-  tagTypes: ["StoreCategory", "Category", "Items"],
+  tagTypes: ["StoreCategory", "Category", "Items", "Orders"],
   endpoints: (builder) => ({
     getStoreCategories: builder.query<StoreCategory[], void>({
       query: () => "admin/store-category/get-all/",
@@ -109,6 +109,12 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Items"],
     }),
+    getOrders: builder.query<Record<string, any>, Object>({
+      query: (store_id) => ({
+        url: `user/store/orders/get-all-orders/${store_id}`,
+      }),
+      providesTags: ["Orders"],
+    }),
   }),
 });
 
@@ -124,4 +130,5 @@ export const {
   useGetCategoriesQuery,
   useEditCategoryMutation,
   useDeleteCategoryMutation,
+  useGetOrdersQuery,
 } = apiSlice;

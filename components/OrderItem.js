@@ -1,14 +1,15 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { Avatar } from "react-native-paper";
 
-const OrderItem = () => {
+const OrderItem = ({ item }) => {
   return (
     <View
       style={{
         flexDirection: "row",
         marginLeft: 20,
-        marginTop: 40,
+        marginVertical: 20,
         justifyContent: "space-between",
       }}
     >
@@ -24,18 +25,22 @@ const OrderItem = () => {
             borderWidth: 1.5,
             borderRadius: 50 / 2,
             justifyContent: "center",
-            paddingLeft: 12,
+            alignItems: "center",
           }}
         >
-          <Feather name="image" size={24} color="black" />
+          {item?.item?.image !== null ? (
+            <Avatar.Image source={{ uri: item?.item?.image }} size={50} />
+          ) : (
+            <Feather name="image" size={24} color="black" />
+          )}
         </View>
         <View
           style={{
             marginLeft: 20,
           }}
         >
-          <Text>Goldfish Pencil</Text>
-          <Text>Qty 1</Text>
+          <Text>{item?.item?.name}</Text>
+          <Text>{`Qty. ${item?.quantity}`}</Text>
         </View>
       </View>
       <Text
@@ -44,7 +49,7 @@ const OrderItem = () => {
           marginTop: 15,
         }}
       >
-        Rs. 10
+        {`Rs. ${item?.item?.selling_price}`}
       </Text>
     </View>
   );

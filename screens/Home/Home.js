@@ -98,6 +98,7 @@ const Home = ({ navigation }) => {
               />
             </ChipWrapper>
             {showSales && <Chart data={ptData} />}
+            {showOrders && <Chart data={ptData} />}
             <OrderWrapper>
               <OrderLabel>Recent Orders</OrderLabel>
               <OrderDescription

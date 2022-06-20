@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import OrderDetails from "../screens/OrderDetails";
+import OrderDetails from "../screens/OrderDetails/OrderDetails";
 import Login from "../screens/Login/Login";
 import Main from "../screens/Main/Main";
 import AddItem from "../screens/AddItem/AddItem";
