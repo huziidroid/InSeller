@@ -100,7 +100,7 @@ const Home = ({ navigation }) => {
             {showSales && <Chart data={ptData} />}
             {showOrders && <Chart data={ptData} />}
             <OrderWrapper>
-              <OrderLabel>Recent Orders</OrderLabel>
+              {/* <OrderLabel>Recent Orders</OrderLabel>
               <OrderDescription
                 orderNumber="101-0002347"
                 itemCount="10"
@@ -115,7 +115,7 @@ const Home = ({ navigation }) => {
                 orderNumber="101-0002348"
                 itemCount="5"
                 orderAmount="1000"
-              />
+              /> */}
             </OrderWrapper>
           </ScrollWrapper>
         </FooterWrapper>

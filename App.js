@@ -31,7 +31,8 @@ const pusher = new Pusher("1fa354c0285989de6e5a", {
 });
 const channel = pusher.subscribe("orders");
 channel.bind("new-order", async (data) => {
-  await schedulePushNotification("New order", data?.message);
+  alert("New Order Received");
+  // schedulePushNotification("New order", "New order received");
 });
 
 export default function App() {

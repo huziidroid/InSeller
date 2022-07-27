@@ -1,12 +1,14 @@
 {
   "expo": {
-    "plugins":[[
-      "expo-notifications",
+    "plugins": [
+      [
+        "expo-notifications",
         {
           "icon": "./assets/icon.png",
           "color": "#ffffff"
         }
-    ]],
+      ]
+    ],
     "name": "InSeller",
     "slug": "InSeller",
     "version": "1.0.0",
