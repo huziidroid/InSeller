@@ -13,6 +13,7 @@ import { selectUser } from "../../redux/slice/userSlice";
 import { ptData } from "./dummyData";
 import Chart from "../../components/Chart";
 import { ScreenWrapper } from "react-native-screen-wrapper";
+import { WEB_STORE_BASE_URL } from "../../api/config";
 import {
   Container,
   AddressBar,
@@ -34,7 +35,7 @@ const Home = ({ navigation }) => {
   const [showSales, setShowSales] = useState(true);
   const [showOrders, setShowOrders] = useState(false);
   const user = useSelector(selectUser);
-  const url = `http://${user?.url_name}.localhost:3000/`;
+  const url = `${WEB_STORE_BASE_URL}${user?.url_name}`;
   const onShare = async () => {
     await Share.share({
       message: `Hi, you can now order from ${user?.name} web store.\n\nContact us at ${user?.phone_number} for more details.\n\n${url}`,
